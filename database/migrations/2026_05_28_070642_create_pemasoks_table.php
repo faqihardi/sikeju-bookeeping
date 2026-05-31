@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('pemasoks', function (Blueprint $table) {
             $table->id();
             $table->string('nama_pemasok',100);
-            $table->integer('no_tlp');
-            $table->text('alamat');
+            $table->string('no_telepon',20)->nullable();
+            $table->text('alamat')->nullable();
             $table->text('keterangan')->nullable();
             $table->timestamps();
         });

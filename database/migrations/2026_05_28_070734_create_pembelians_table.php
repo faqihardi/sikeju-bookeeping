@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('pembelians', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('metode_id')->constrained()->onDelete('cascade');
+            $table->foreignId('metode_pembayaran_id')->constrained()->onDelete('cascade');
             $table->foreignId('pemasok_id')->constrained()->onDelete('cascade');
             $table->string('nama_pembelian');
             $table->decimal('total',12);

@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pengeluaran_operasionals', function (Blueprint $table) {
+        Schema::create('produksis', function (Blueprint $table) {
             $table->id();
-            $table->string('kategori');
-            $table->decimal('nominal',12);
-            $table->text('keterangan')->nullable();
             $table->date('tanggal');
+            $table->foreignId('produk_id')->constrained()->onDelete('cascade');
+            $table->integer('qty_hasil');
+            $table->text('keterangan');
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pengeluaran_operasionals');
+        Schema::dropIfExists('produksis');
     }
 };
