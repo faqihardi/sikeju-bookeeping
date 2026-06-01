@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('hutangs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pembelian_id')->nullable()->constrained()->onDelete('cascade');
-            $table->foreignId('peralatan_id')->nullable();
+            $table->foreignId('pembelian_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('peralatan_id')->nullable()->constrained()->nullOnDelete();
             $table->text('keterangan')->nullable();
             $table->decimal('nominal',12);
             $table->enum('status',['lunas','belum_lunas']);
