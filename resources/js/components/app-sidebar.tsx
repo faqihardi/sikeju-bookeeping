@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { BookOpen, FolderGit2, LayoutGrid } from 'lucide-react';
+import { FolderGit2, LayoutGrid, Wheat, PackageSearch, TruckIcon, BookUser, Wrench, BadgeDollarSign, Banknote, ChartCandlestick, Activity, ShoppingCart, TrendingDown, TrendingUp, Weight, CookingPot, SearchCheck, BookOpenText, ArrowDownUp, Scale } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -24,16 +24,119 @@ const mainNavItems: NavItem[] = [
     },
 ];
 
+const masterDataNavItems: NavItem[] = [
+    {
+        title: 'Bahan Baku',
+        href: dashboard(),
+        icon: Wheat,
+    },
+    {
+        title: 'Produk',
+        href: dashboard(),
+        icon: PackageSearch,
+    },
+    {
+        title: 'Pemasok',
+        href: dashboard(),
+        icon: TruckIcon,
+    },
+    {
+        title: 'Pelanggan',
+        href: dashboard(),
+        icon: BookUser,
+    },
+    {
+        title: 'Peralatan',
+        href: dashboard(),
+        icon: Wrench,
+    },
+    {
+        title: 'Metode Pembayaran',
+        href: dashboard(),
+        icon: BadgeDollarSign,
+    },
+]
+
+const financeNavItems: NavItem[] = [
+    {
+        title: 'Kas',
+        href: dashboard(),
+        icon: Banknote
+    },
+    {
+        title: 'Modal',
+        href: dashboard(),
+        icon: ChartCandlestick
+    },
+    {
+        title: 'Biaya Operasional',
+        href: dashboard(),
+        icon: Activity
+    },
+]
+
+const purchaseNavItems: NavItem[] = [
+    {
+        title: 'Transaksi Pembelian',
+        href: dashboard(),
+        icon: ShoppingCart
+    },
+    {
+        title: 'Hutang Usaha',
+        href: dashboard(),
+        icon: TrendingDown
+    },
+]
+
+const salesNavItems: NavItem[] = [
+    {
+        title: 'Transaksi Penjualan',
+        href: dashboard(),
+        icon: Weight
+    },
+    {
+        title: 'Piutang Usaha',
+        href: dashboard(),
+        icon: TrendingUp
+    },
+]
+
+const productionNavItems: NavItem[] = [
+    {
+        title: 'Produksi',
+        href: dashboard(),
+        icon: CookingPot
+    },
+    {
+        title: 'Koreksi Stok',
+        href: dashboard(),
+        icon: SearchCheck
+    },
+]
+
+const reportNavItems: NavItem[] = [
+    {
+        title: 'Laba Rugi',
+        href: dashboard(),
+        icon: BookOpenText
+    },
+    {
+        title: 'Arus Kas',
+        href: dashboard(),
+        icon: ArrowDownUp
+    },
+    {
+        title: 'Posisi Keuangan',
+        href: dashboard(),
+        icon: Scale
+    },
+]
+
 const footerNavItems: NavItem[] = [
     {
         title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
+        href: 'https://github.com/faqihardi/sikeju-bookeeping',
         icon: FolderGit2,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
     },
 ];
 
@@ -53,7 +156,13 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} />
+                <NavMain items={mainNavItems} group='Platform'/>
+                <NavMain items={masterDataNavItems} group='Master Data'/>
+                <NavMain items={financeNavItems} group='Keuangan & Kas'/>
+                <NavMain items={purchaseNavItems} group='Pembelian'/>
+                <NavMain items={salesNavItems} group='Penjualan'/>
+                <NavMain items={productionNavItems} group='Produksi'/>
+                <NavMain items={reportNavItems} group='Laporan'/>
             </SidebarContent>
 
             <SidebarFooter>
