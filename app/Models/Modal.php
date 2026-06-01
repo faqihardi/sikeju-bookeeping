@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Kas extends Model
+class Modal extends Model
 {
-    protected $table = 'kash';
+    protected $table = 'modals';
 
     protected $guarded = [];
 }
