@@ -13,6 +13,6 @@ class Peralatan extends Model
 
     public function hutang(): HasOne
     {
-        return $this->hasOne(Hutang::class);
+        return $this->hasOne(Hutang::class, 'peralatan_id');
     }
 }
