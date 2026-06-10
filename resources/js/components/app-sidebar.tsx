@@ -16,6 +16,7 @@ import {
 import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
 import * as materials from '@/actions/App/Http/Controllers/BahanBakuController';
+import * as products from '@/actions/App/Http/Controllers/ProdukController';
 
 const mainNavItems: NavItem[] = [
     {
@@ -33,7 +34,7 @@ const masterDataNavItems: NavItem[] = [
     },
     {
         title: 'Produk',
-        href: dashboard(),
+        href: products.index(),
         icon: PackageSearch,
     },
     {

@@ -11,29 +11,31 @@ import {
 } from "@/components/ui/field"
 
 import { Input } from "@/components/ui/input"
-import * as materials from "@/actions/App/Http/Controllers/BahanBakuController"
+import * as products from "@/actions/App/Http/Controllers/ProdukController"
 
 interface Props {
-    bahanBaku?: {
+    product?: {
         id: number
-        nama_bahan: string
+        nama_produk: string
         stok: number
+        hpp: number
+        harga_jual: number
         satuan: string
-        harga_satuan: number
     }
 }
 
-export function BahanBakuForm({
-    bahanBaku
+export function ProdukForm({
+    product
 }: Props) {
 
-    const isEdit = !!bahanBaku
+    const isEdit = !!product
 
     const form = useForm({
-        nama_bahan: bahanBaku?.nama_bahan ?? "",
-        stok: bahanBaku?.stok ?? "",
-        satuan: bahanBaku?.satuan ?? "",
-        harga_satuan: bahanBaku?.harga_satuan ?? "",
+        nama_produk: product?.nama_produk ?? "",
+        stok: product?.stok ?? "",
+        hpp: product?.hpp ?? "",
+        harga_jual: product?.harga_jual ?? "",
+        satuan: product?.satuan ?? "",
     })
 
     function submit(
@@ -42,26 +44,15 @@ export function BahanBakuForm({
         e.preventDefault()
 
         const action = isEdit
-            ? materials.update(bahanBaku.id)
-            : materials.store()
+            ? products.update(product.id)
+            : products.store()
 
         form.submit(action.method, action.url, {
             onSuccess: () => {
-                toast.success(
-                    isEdit
-                        ? "Data berhasil diperbarui"
-                        : "Data berhasil disimpan"
-                )
-
-                if (!isEdit) {
-                    form.reset()
-                }
+                // Success is handled by Index flash message
             },
-
-            onError: () => {
-                toast.error(
-                    "Periksa kembali data"
-                )
+            onError: (errors) => {
+                toast.error("Terdapat kesalahan pada form. Silakan periksa kembali.")
             }
         })
     }
@@ -70,20 +61,20 @@ export function BahanBakuForm({
         <form onSubmit={submit}>
             <FieldGroup className="max-w-2xl">
                 <Field>
-                    <FieldLabel htmlFor="nama_bahan">Nama Bahan</FieldLabel>
+                    <FieldLabel htmlFor="nama_produk">Nama Produk</FieldLabel>
                     <Input
-                        id="nama_bahan"
-                        value={form.data.nama_bahan}
+                        id="nama_produk"
+                        value={form.data.nama_produk}
                         onChange={(e) =>
                             form.setData(
-                                "nama_bahan",
+                                "nama_produk",
                                 e.target.value
                             )
                         }
                     />
-                    {form.errors.nama_bahan && (
+                    {form.errors.nama_produk && (
                         <FieldError>
-                            {form.errors.nama_bahan}
+                            {form.errors.nama_produk}
                         </FieldError>
                     )}
                 </Field>
@@ -93,7 +84,7 @@ export function BahanBakuForm({
                         <FieldLabel htmlFor="satuan">Satuan</FieldLabel>
                         <Input
                             id="satuan"
-                            placeholder="Contoh: Pcs, Kg, Liter"
+                            placeholder="Contoh: Pcs, Box, Kg"
                             value={form.data.satuan}
                             onChange={(e) =>
                                 form.setData(
@@ -108,32 +99,56 @@ export function BahanBakuForm({
                             </FieldError>
                         )}
                     </Field>
+                </div>
 
+                <div className="grid grid-cols-2 gap-4">
                     <Field>
-                        <FieldLabel htmlFor="harga_satuan">Harga Satuan</FieldLabel>
+                        <FieldLabel htmlFor="hpp">HPP (Harga Pokok Penjualan)</FieldLabel>
                         <Input
-                            id="harga_satuan"
+                            id="hpp"
                             type="number"
-                            value={form.data.harga_satuan}
+                            value={form.data.hpp}
                             onChange={(e) =>
                                 form.setData(
-                                    "harga_satuan",
+                                    "hpp",
                                     e.target.value
                                 )
                             }
                         />
-                        {form.errors.harga_satuan && (
+                        <p className="text-xs text-muted-foreground mt-1">
+                            Biaya modal untuk memproduksi 1 satuan produk.
+                        </p>
+                        {form.errors.hpp && (
                             <FieldError>
-                                {form.errors.harga_satuan}
+                                {form.errors.hpp}
+                            </FieldError>
+                        )}
+                    </Field>
+
+                    <Field>
+                        <FieldLabel htmlFor="harga_jual">Harga Jual</FieldLabel>
+                        <Input
+                            id="harga_jual"
+                            type="number"
+                            value={form.data.harga_jual}
+                            onChange={(e) =>
+                                form.setData(
+                                    "harga_jual",
+                                    e.target.value
+                                )
+                            }
+                        />
+                        {form.errors.harga_jual && (
+                            <FieldError>
+                                {form.errors.harga_jual}
                             </FieldError>
                         )}
                     </Field>
                 </div>
 
                 <Field>
-                    <FieldLabel htmlFor="stok">Stok Fisik Awal</FieldLabel>
+                    <FieldLabel>Stok Fisik Awal</FieldLabel>
                     <Input
-                        id="stok"
                         type="number"
                         value={form.data.stok}
                         disabled={isEdit}
@@ -145,7 +160,7 @@ export function BahanBakuForm({
                         }
                     />
                     <p className="text-xs text-muted-foreground mt-1">
-                        {isEdit ? "Stok hanya bisa berubah lewat fitur Pembelian/Koreksi Stok." : "Masukkan stok awal/inisialisasi."}
+                        {isEdit ? "Stok produk hanya bisa berubah lewat fitur Produksi, Penjualan, atau Koreksi Stok." : "Masukkan stok produk yang sudah jadi/tersedia saat ini."}
                     </p>
 
                     {form.errors.stok && (
@@ -159,7 +174,7 @@ export function BahanBakuForm({
                     <Button
                         type="button"
                         variant="outline"
-                        onClick={() => router.visit(materials.index().url)}
+                        onClick={() => router.visit(products.index().url)}
                     >
                         Batal
                     </Button>
@@ -175,11 +190,7 @@ export function BahanBakuForm({
                         type="submit"
                         disabled={form.processing}
                     >
-                        {form.processing
-                            ? "Menyimpan..."
-                            : isEdit
-                                ? "Update"
-                                : "Simpan"}
+                        Simpan
                     </Button>
                 </div>
             </FieldGroup>

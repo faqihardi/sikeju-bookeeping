@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\BahanBaku;
+namespace App\Http\Requests\Produk;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateBahanBakuRequest extends FormRequest
+class StoreProdukRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -18,15 +18,16 @@ class UpdateBahanBakuRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, ValidationRule|array<mixed>|string>
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
-            'nama_bahan' => 'required|string|min:3|max:100',
+            'nama_produk' => 'required|string|min:3|max:100',
             'stok' => 'nullable|numeric|min:0',
             'satuan'=> 'required|string',
-            'harga_satuan' => 'required|numeric|min:1'
+            'hpp' => 'required|numeric|min:0',
+            'harga_jual' => 'required|numeric|min:0',
         ];
     }
 }

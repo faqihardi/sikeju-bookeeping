@@ -17,6 +17,7 @@ return new class extends Migration
             $table->decimal('hpp',12);
             $table->decimal('harga_jual');
             $table->integer('stok');
+            $table->string('satuan')->nullable();
             $table->timestamps();
         });
     }
