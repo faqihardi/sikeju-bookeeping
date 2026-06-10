@@ -3,8 +3,19 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { Link, router } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
-import { Pencil, Trash2 } from 'lucide-react';
+import { Pencil, Trash2, ArrowUpDown } from 'lucide-react';
 import * as materials from '@/actions/App/Http/Controllers/BahanBakuController';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 export type BahanBaku = {
   id: number
@@ -22,7 +33,18 @@ export const columns: ColumnDef<BahanBaku>[] = [
   },
   {
     accessorKey: "nama_bahan",
-    header: "Nama Bahan",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="-ml-4"
+        >
+          Nama Bahan
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
   },
   {
     accessorKey: "stok",
@@ -59,18 +81,33 @@ export const columns: ColumnDef<BahanBaku>[] = [
               <Pencil className="h-4 w-4" />
             </Button>
           </Link>
-          <Button 
-            variant="destructive" 
-            size="icon"
-            onClick={() => {
-              if (confirm("Yakin ingin menghapus data ini?")) {
-                const action = materials.destroy(id);
-                router.visit(action.url, { method: 'delete' });
-              }
-            }}
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="destructive" size="icon">
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Hapus Bahan Baku?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Tindakan ini tidak dapat dibatalkan. Data bahan baku ini akan dihapus permanen dari sistem.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Batal</AlertDialogCancel>
+                <AlertDialogAction 
+                  onClick={() => {
+                    const action = materials.destroy(id);
+                    router.visit(action.url, { method: 'delete' });
+                  }}
+                  className="bg-red-600 hover:bg-red-700 focus:ring-red-600"
+                >
+                  Hapus
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       )
     }
