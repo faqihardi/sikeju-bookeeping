@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
+import * as materials from '@/actions/App/Http/Controllers/BahanBakuController';
 
 const mainNavItems: NavItem[] = [
     {
@@ -27,7 +28,7 @@ const mainNavItems: NavItem[] = [
 const masterDataNavItems: NavItem[] = [
     {
         title: 'Bahan Baku',
-        href: dashboard(),
+        href: materials.index(),
         icon: Wheat,
     },
     {
@@ -156,13 +157,13 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} group='Platform'/>
-                <NavMain items={masterDataNavItems} group='Master Data'/>
-                <NavMain items={financeNavItems} group='Keuangan & Kas'/>
-                <NavMain items={purchaseNavItems} group='Pembelian'/>
-                <NavMain items={salesNavItems} group='Penjualan'/>
-                <NavMain items={productionNavItems} group='Produksi'/>
-                <NavMain items={reportNavItems} group='Laporan'/>
+                <NavMain items={mainNavItems} group='Platform' />
+                <NavMain items={masterDataNavItems} group='Master Data' />
+                <NavMain items={financeNavItems} group='Keuangan & Kas' />
+                <NavMain items={purchaseNavItems} group='Pembelian' />
+                <NavMain items={salesNavItems} group='Penjualan' />
+                <NavMain items={productionNavItems} group='Produksi' />
+                <NavMain items={reportNavItems} group='Laporan' />
             </SidebarContent>
 
             <SidebarFooter>
