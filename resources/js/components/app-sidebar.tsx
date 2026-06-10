@@ -18,6 +18,7 @@ import type { NavItem } from '@/types';
 import * as materials from '@/actions/App/Http/Controllers/BahanBakuController';
 import * as products from '@/actions/App/Http/Controllers/ProdukController';
 import * as suppliers from '@/actions/App/Http/Controllers/PemasokController';
+import * as customers from '@/actions/App/Http/Controllers/PelangganController';
 
 const mainNavItems: NavItem[] = [
     {
@@ -45,7 +46,7 @@ const masterDataNavItems: NavItem[] = [
     },
     {
         title: 'Pelanggan',
-        href: dashboard(),
+        href: customers.index(),
         icon: BookUser,
     },
     {
