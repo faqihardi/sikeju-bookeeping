@@ -19,6 +19,7 @@ import * as materials from '@/actions/App/Http/Controllers/BahanBakuController';
 import * as products from '@/actions/App/Http/Controllers/ProdukController';
 import * as suppliers from '@/actions/App/Http/Controllers/PemasokController';
 import * as customers from '@/actions/App/Http/Controllers/PelangganController';
+import * as equipments from '@/actions/App/Http/Controllers/PeralatanController';
 
 const mainNavItems: NavItem[] = [
     {
@@ -51,7 +52,7 @@ const masterDataNavItems: NavItem[] = [
     },
     {
         title: 'Peralatan',
-        href: dashboard(),
+        href: equipments.index(),
         icon: Wrench,
     },
     {
