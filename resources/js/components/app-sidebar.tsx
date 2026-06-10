@@ -17,6 +17,7 @@ import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
 import * as materials from '@/actions/App/Http/Controllers/BahanBakuController';
 import * as products from '@/actions/App/Http/Controllers/ProdukController';
+import * as suppliers from '@/actions/App/Http/Controllers/PemasokController';
 
 const mainNavItems: NavItem[] = [
     {
@@ -39,7 +40,7 @@ const masterDataNavItems: NavItem[] = [
     },
     {
         title: 'Pemasok',
-        href: dashboard(),
+        href: suppliers.index(),
         icon: TruckIcon,
     },
     {
