@@ -23,6 +23,7 @@ class StoreProdukRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'kode' => 'required|string|max:20|unique:produks,kode',
             'nama_produk' => 'required|string|min:3|max:100',
             'stok' => 'nullable|numeric|min:0',
             'satuan'=> 'required|string',

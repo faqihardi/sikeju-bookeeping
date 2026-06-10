@@ -19,6 +19,7 @@ import {
 
 export type BahanBaku = {
   id: number
+  kode: string
   nama_bahan: string
   stok: number
   satuan: string
@@ -28,8 +29,8 @@ export type BahanBaku = {
 
 export const columns: ColumnDef<BahanBaku>[] = [
   {
-    accessorKey: "id",
-    header: "ID",
+    accessorKey: "kode",
+    header: "Kode",
   },
   {
     accessorKey: "nama_bahan",

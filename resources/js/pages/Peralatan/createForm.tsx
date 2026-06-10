@@ -23,21 +23,25 @@ import * as equipments from "@/actions/App/Http/Controllers/PeralatanController"
 interface Props {
     peralatan?: {
         id: number
+        kode: string
         nama_alat: string
         harga_perolehan: string
         tgl_beli: string
         umur_ekonomis: number
         status_alat: 'layak_pakai' | 'tidak_layak_pakai'
     }
+    defaultKode?: string
 }
 
 export function PeralatanForm({
-    peralatan
+    peralatan,
+    defaultKode
 }: Props) {
 
     const isEdit = !!peralatan
 
     const form = useForm({
+        kode: peralatan?.kode ?? defaultKode ?? "",
         nama_alat: peralatan?.nama_alat ?? "",
         harga_perolehan: peralatan?.harga_perolehan ?? "",
         tgl_beli: peralatan?.tgl_beli ?? "",
@@ -70,6 +74,29 @@ export function PeralatanForm({
     return (
         <form onSubmit={submit}>
             <FieldGroup className="max-w-2xl">
+                <Field>
+                    <FieldLabel htmlFor="kode">
+                        Kode Peralatan
+                    </FieldLabel>
+
+                    <Input
+                        id="kode"
+                        value={form.data.kode}
+                        onChange={(e) =>
+                            form.setData(
+                                "kode",
+                                e.target.value
+                            )
+                        }
+                    />
+
+                    {form.errors.kode && (
+                        <FieldError>
+                            {form.errors.kode}
+                        </FieldError>
+                    )}
+                </Field>
+
                 <Field>
                     <FieldLabel htmlFor="nama_alat">
                         Nama Alat

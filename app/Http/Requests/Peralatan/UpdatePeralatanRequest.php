@@ -18,6 +18,7 @@ class UpdatePeralatanRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'kode' => 'required|string|max:20|unique:peralatans,kode,' . $this->route('equipment')->id,
             'nama_alat' => 'required|string|min:3|max:100',
             'harga_perolehan' => 'required|numeric|min:0',
             'tgl_beli' => 'required|date',

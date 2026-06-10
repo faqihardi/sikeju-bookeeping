@@ -16,21 +16,25 @@ import * as products from "@/actions/App/Http/Controllers/ProdukController"
 interface Props {
     product?: {
         id: number
+        kode: string
         nama_produk: string
         stok: number
         hpp: number
         harga_jual: number
         satuan: string
     }
+    defaultKode?: string
 }
 
 export function ProdukForm({
-    product
+    product,
+    defaultKode
 }: Props) {
 
     const isEdit = !!product
 
     const form = useForm({
+        kode: product?.kode ?? defaultKode ?? "",
         nama_produk: product?.nama_produk ?? "",
         stok: product?.stok ?? "",
         hpp: product?.hpp ?? "",
@@ -60,6 +64,29 @@ export function ProdukForm({
     return (
         <form onSubmit={submit}>
             <FieldGroup className="max-w-2xl">
+                <Field>
+                    <FieldLabel htmlFor="kode">
+                        Kode Produk
+                    </FieldLabel>
+
+                    <Input
+                        id="kode"
+                        value={form.data.kode}
+                        onChange={(e) =>
+                            form.setData(
+                                "kode",
+                                e.target.value
+                            )
+                        }
+                    />
+
+                    {form.errors.kode && (
+                        <FieldError>
+                            {form.errors.kode}
+                        </FieldError>
+                    )}
+                </Field>
+
                 <Field>
                     <FieldLabel htmlFor="nama_produk">Nama Produk</FieldLabel>
                     <Input

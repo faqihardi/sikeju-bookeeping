@@ -20,6 +20,7 @@ import * as products from '@/actions/App/Http/Controllers/ProdukController';
 import * as suppliers from '@/actions/App/Http/Controllers/PemasokController';
 import * as customers from '@/actions/App/Http/Controllers/PelangganController';
 import * as equipments from '@/actions/App/Http/Controllers/PeralatanController';
+import * as paymentMethods from '@/actions/App/Http/Controllers/MetodePembayaranController';
 
 const mainNavItems: NavItem[] = [
     {
@@ -57,7 +58,7 @@ const masterDataNavItems: NavItem[] = [
     },
     {
         title: 'Metode Pembayaran',
-        href: dashboard(),
+        href: paymentMethods.index(),
         icon: BadgeDollarSign,
     },
 ]

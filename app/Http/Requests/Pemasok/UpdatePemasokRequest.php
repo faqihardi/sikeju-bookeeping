@@ -18,6 +18,7 @@ class UpdatePemasokRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'kode' => 'required|string|max:20|unique:pemasoks,kode,' . $this->route('supplier')->id,
             'nama_pemasok' => 'required|string|min:3|max:100',
             'no_telepon' => 'nullable|string|max:20',
             'alamat' => 'nullable|string',

@@ -19,6 +19,7 @@ import {
 
 export type Pemasok = {
   id: number
+  kode: string
   nama_pemasok: string
   no_telepon: string | null
   alamat: string | null
@@ -27,6 +28,10 @@ export type Pemasok = {
 }
 
 export const columns: ColumnDef<Pemasok>[] = [
+  {
+    accessorKey: "kode",
+    header: "Kode",
+  },
   {
     accessorKey: "nama_pemasok",
     header: ({ column }) => {

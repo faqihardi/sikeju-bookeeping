@@ -3,8 +3,9 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { Link, router } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { Pencil, Trash2, ArrowUpDown } from 'lucide-react';
-import * as products from '@/actions/App/Http/Controllers/ProdukController';
+import * as paymentMethods from '@/actions/App/Http/Controllers/MetodePembayaranController';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,24 +18,20 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 
-export type Produk = {
+export type MetodePembayaran = {
   id: number
   kode: string
-  nama_produk: string
-  stok: number
-  hpp: number
-  harga_jual: string
-  satuan: string
+  nama_metode: string
   updated_at: string
 }
 
-export const columns: ColumnDef<Produk>[] = [
+export const columns: ColumnDef<MetodePembayaran>[] = [
   {
     accessorKey: "kode",
     header: "Kode",
   },
   {
-    accessorKey: "nama_produk",
+    accessorKey: "nama_metode",
     header: ({ column }) => {
       return (
         <Button
@@ -42,31 +39,17 @@ export const columns: ColumnDef<Produk>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           className="-ml-4"
         >
-          Nama Produk
+          Nama Metode
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
     },
-  },
-  {
-    accessorKey: "stok",
-    header: "Stok",
     cell: ({ row }) => {
-      return `${row.original.stok} ${row.original.satuan}`
-    }
-  },
-  {
-    accessorKey: "hpp",
-    header: "HPP",
-    cell: ({ row }) => {
-      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(row.original.hpp)
-    }
-  },
-  {
-    accessorKey: "harga_jual",
-    header: "Harga Jual",
-    cell: ({ row }) => {
-      return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(Number(row.original.harga_jual))
+      return (
+        <span className="font-medium">
+          {row.getValue("nama_metode")}
+        </span>
+      )
     }
   },
   {
@@ -87,7 +70,7 @@ export const columns: ColumnDef<Produk>[] = [
       const id = row.original.id;
       return (
         <div className="flex items-center gap-2">
-          <Link href={products.edit(id).url}>
+          <Link href={paymentMethods.edit(id).url}>
             <Button variant="outline" size="icon">
               <Pencil className="h-4 w-4" />
             </Button>
@@ -100,16 +83,16 @@ export const columns: ColumnDef<Produk>[] = [
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Hapus Produk?</AlertDialogTitle>
+                <AlertDialogTitle>Hapus Metode Pembayaran?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  Tindakan ini tidak dapat dibatalkan. Data produk ini akan dihapus permanen dari sistem.
+                  Tindakan ini tidak dapat dibatalkan. Data metode pembayaran ini akan dihapus permanen dari sistem beserta riwayat transaksi terkait.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Batal</AlertDialogCancel>
                 <AlertDialogAction 
                   onClick={() => {
-                    const action = products.destroy(id);
+                    const action = paymentMethods.destroy(id);
                     router.visit(action.url, { method: 'delete' });
                   }}
                   className="bg-red-600 hover:bg-red-700 focus:ring-red-600"

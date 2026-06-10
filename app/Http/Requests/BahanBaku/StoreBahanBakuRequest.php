@@ -23,6 +23,7 @@ class StoreBahanBakuRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'kode' => 'required|string|max:20|unique:bahan_bakus,kode',
             'nama_bahan' => 'required|string|min:3|max:100',
             'stok' => 'nullable|numeric|min:0',
             'satuan'=> 'required|string',

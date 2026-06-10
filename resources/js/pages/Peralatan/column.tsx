@@ -20,6 +20,7 @@ import {
 
 export type Peralatan = {
   id: number
+  kode: string
   nama_alat: string
   harga_perolehan: string
   tgl_beli: string
@@ -29,6 +30,10 @@ export type Peralatan = {
 }
 
 export const columns: ColumnDef<Peralatan>[] = [
+  {
+    accessorKey: "kode",
+    header: "Kode",
+  },
   {
     accessorKey: "nama_alat",
     header: ({ column }) => {

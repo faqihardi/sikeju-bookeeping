@@ -18,7 +18,20 @@ class ProdukController extends Controller
     }
 
     public function create() {
-        return Inertia::render('Produk/Create');
+        return Inertia::render('Produk/Create', [
+            'defaultKode' => $this->generateKode()
+        ]);
+    }
+
+    private function generateKode() {
+        $lastRecord = Produk::orderBy('id', 'desc')->first();
+        $nextId = 1;
+        if ($lastRecord && preg_match('/-(\d+)$/', $lastRecord->kode, $matches)) {
+            $nextId = intval($matches[1]) + 1;
+        } elseif ($lastRecord) {
+            $nextId = $lastRecord->id + 1;
+        }
+        return 'PRD-' . str_pad($nextId, 4, '0', STR_PAD_LEFT);
     }
 
     public function store(StoreProdukRequest $request) {

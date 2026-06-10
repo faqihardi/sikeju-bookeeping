@@ -18,7 +18,20 @@ class BahanBakuController extends Controller
     }
 
     public function create() {
-        return Inertia::render('BahanBaku/Create');
+        return Inertia::render('BahanBaku/Create', [
+            'defaultKode' => $this->generateKode()
+        ]);
+    }
+
+    private function generateKode() {
+        $lastRecord = BahanBaku::orderBy('id', 'desc')->first();
+        $nextId = 1;
+        if ($lastRecord && preg_match('/-(\d+)$/', $lastRecord->kode, $matches)) {
+            $nextId = intval($matches[1]) + 1;
+        } elseif ($lastRecord) {
+            $nextId = $lastRecord->id + 1;
+        }
+        return 'BB-' . str_pad($nextId, 4, '0', STR_PAD_LEFT);
     }
 
     public function store(StoreBahanBakuRequest $request) {

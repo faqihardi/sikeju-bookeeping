@@ -19,12 +19,17 @@ import {
 
 export type Pelanggan = {
   id: number
+  kode: string
   nama_pelanggan: string
   no_telepon: string | null
   updated_at: string
 }
 
 export const columns: ColumnDef<Pelanggan>[] = [
+  {
+    accessorKey: "kode",
+    header: "Kode",
+  },
   {
     accessorKey: "nama_pelanggan",
     header: ({ column }) => {

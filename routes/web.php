@@ -7,6 +7,7 @@ use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\PemasokController;
 use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\PeralatanController;
+use App\Http\Controllers\MetodePembayaranController;
 
 Route::inertia('/', 'welcome')->name('home');
 
@@ -17,6 +18,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('suppliers', PemasokController::class);
     Route::resource('customers', PelangganController::class);
     Route::resource('equipments', PeralatanController::class);
+    Route::resource('payment-methods', MetodePembayaranController::class);
 });
 
 require __DIR__.'/settings.php';

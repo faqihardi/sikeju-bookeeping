@@ -11,29 +11,27 @@ import {
 } from "@/components/ui/field"
 
 import { Input } from "@/components/ui/input"
-import * as customers from "@/actions/App/Http/Controllers/PelangganController"
+import * as paymentMethods from "@/actions/App/Http/Controllers/MetodePembayaranController"
 
 interface Props {
-    pelanggan?: {
+    paymentMethod?: {
         id: number
         kode: string
-        nama_pelanggan: string
-        no_telepon: string | null
+        nama_metode: string
     }
     defaultKode?: string
 }
 
-export function PelangganForm({
-    pelanggan,
+export function MetodePembayaranForm({
+    paymentMethod,
     defaultKode
 }: Props) {
 
-    const isEdit = !!pelanggan
+    const isEdit = !!paymentMethod
 
     const form = useForm({
-        kode: pelanggan?.kode ?? defaultKode ?? "",
-        nama_pelanggan: pelanggan?.nama_pelanggan ?? "",
-        no_telepon: pelanggan?.no_telepon ?? "",
+        kode: paymentMethod?.kode ?? defaultKode ?? "",
+        nama_metode: paymentMethod?.nama_metode ?? "",
     })
 
     function submit(
@@ -42,8 +40,8 @@ export function PelangganForm({
         e.preventDefault()
 
         const action = isEdit
-            ? customers.update(pelanggan.id)
-            : customers.store()
+            ? paymentMethods.update(paymentMethod.id)
+            : paymentMethods.store()
 
         form.submit(action.method, action.url, {
             onSuccess: () => {
@@ -63,11 +61,12 @@ export function PelangganForm({
             <FieldGroup className="max-w-2xl">
                 <Field>
                     <FieldLabel htmlFor="kode">
-                        Kode Pelanggan
+                        Kode Metode Pembayaran
                     </FieldLabel>
 
                     <Input
                         id="kode"
+                        placeholder="Contoh: MP-0001"
                         value={form.data.kode}
                         onChange={(e) =>
                             form.setData(
@@ -85,59 +84,34 @@ export function PelangganForm({
                 </Field>
 
                 <Field>
-                    <FieldLabel htmlFor="nama_pelanggan">
-                        Nama Pelanggan
+                    <FieldLabel htmlFor="nama_metode">
+                        Nama Metode Pembayaran
                     </FieldLabel>
 
                     <Input
-                        id="nama_pelanggan"
-                        value={form.data.nama_pelanggan}
+                        id="nama_metode"
+                        placeholder="Contoh: Transfer Bank Mandiri, Cash, COD"
+                        value={form.data.nama_metode}
                         onChange={(e) =>
                             form.setData(
-                                "nama_pelanggan",
+                                "nama_metode",
                                 e.target.value
                             )
                         }
                     />
 
-                    {form.errors.nama_pelanggan && (
+                    {form.errors.nama_metode && (
                         <FieldError>
-                            {form.errors.nama_pelanggan}
+                            {form.errors.nama_metode}
                         </FieldError>
                     )}
                 </Field>
-
-                <div className="grid grid-cols-2 gap-4">
-                    <Field>
-                        <FieldLabel htmlFor="no_telepon">
-                            No. Telepon
-                        </FieldLabel>
-
-                        <Input
-                            id="no_telepon"
-                            placeholder="Contoh: 08123456789"
-                            value={form.data.no_telepon}
-                            onChange={(e) =>
-                                form.setData(
-                                    "no_telepon",
-                                    e.target.value
-                                )
-                            }
-                        />
-
-                        {form.errors.no_telepon && (
-                            <FieldError>
-                                {form.errors.no_telepon}
-                            </FieldError>
-                        )}
-                    </Field>
-                </div>
 
                 <div className="flex gap-4 mt-6">
                     <Button
                         type="button"
                         variant="outline"
-                        onClick={() => router.visit(customers.index().url)}
+                        onClick={() => router.visit(paymentMethods.index().url)}
                     >
                         Batal
                     </Button>

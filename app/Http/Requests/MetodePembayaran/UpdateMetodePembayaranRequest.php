@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Pelanggan;
+namespace App\Http\Requests\MetodePembayaran;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StorePelangganRequest extends FormRequest
+class UpdateMetodePembayaranRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -18,9 +18,8 @@ class StorePelangganRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'kode' => 'required|string|max:20|unique:pelanggans,kode',
-            'nama_pelanggan' => 'required|string|min:3|max:100',
-            'no_telepon' => 'nullable|string|max:20',
+            'kode' => 'required|string|max:20|unique:metode_pembayarans,kode,' . $this->route('payment_method')->id,
+            'nama_metode' => 'required|string|min:3|max:100',
         ];
     }
 }

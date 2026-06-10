@@ -16,20 +16,24 @@ import * as materials from "@/actions/App/Http/Controllers/BahanBakuController"
 interface Props {
     bahanBaku?: {
         id: number
+        kode: string
         nama_bahan: string
         stok: number
         satuan: string
         harga_satuan: number
     }
+    defaultKode?: string
 }
 
 export function BahanBakuForm({
-    bahanBaku
+    bahanBaku,
+    defaultKode
 }: Props) {
 
     const isEdit = !!bahanBaku
 
     const form = useForm({
+        kode: bahanBaku?.kode ?? defaultKode ?? "",
         nama_bahan: bahanBaku?.nama_bahan ?? "",
         stok: bahanBaku?.stok ?? "",
         satuan: bahanBaku?.satuan ?? "",
@@ -69,6 +73,29 @@ export function BahanBakuForm({
     return (
         <form onSubmit={submit}>
             <FieldGroup className="max-w-2xl">
+                <Field>
+                    <FieldLabel htmlFor="kode">
+                        Kode Bahan Baku
+                    </FieldLabel>
+
+                    <Input
+                        id="kode"
+                        value={form.data.kode}
+                        onChange={(e) =>
+                            form.setData(
+                                "kode",
+                                e.target.value
+                            )
+                        }
+                    />
+
+                    {form.errors.kode && (
+                        <FieldError>
+                            {form.errors.kode}
+                        </FieldError>
+                    )}
+                </Field>
+
                 <Field>
                     <FieldLabel htmlFor="nama_bahan">Nama Bahan</FieldLabel>
                     <Input

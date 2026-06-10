@@ -17,20 +17,24 @@ import * as suppliers from "@/actions/App/Http/Controllers/PemasokController"
 interface Props {
     pemasok?: {
         id: number
+        kode: string
         nama_pemasok: string
         no_telepon: string | null
         alamat: string | null
         keterangan: string | null
     }
+    defaultKode?: string
 }
 
 export function PemasokForm({
-    pemasok
+    pemasok,
+    defaultKode
 }: Props) {
 
     const isEdit = !!pemasok
 
     const form = useForm({
+        kode: pemasok?.kode ?? defaultKode ?? "",
         nama_pemasok: pemasok?.nama_pemasok ?? "",
         no_telepon: pemasok?.no_telepon ?? "",
         alamat: pemasok?.alamat ?? "",
@@ -62,6 +66,29 @@ export function PemasokForm({
     return (
         <form onSubmit={submit}>
             <FieldGroup className="max-w-2xl">
+                <Field>
+                    <FieldLabel htmlFor="kode">
+                        Kode Pemasok
+                    </FieldLabel>
+
+                    <Input
+                        id="kode"
+                        value={form.data.kode}
+                        onChange={(e) =>
+                            form.setData(
+                                "kode",
+                                e.target.value
+                            )
+                        }
+                    />
+
+                    {form.errors.kode && (
+                        <FieldError>
+                            {form.errors.kode}
+                        </FieldError>
+                    )}
+                </Field>
+
                 <Field>
                     <FieldLabel htmlFor="nama_pemasok">
                         Nama Pemasok
