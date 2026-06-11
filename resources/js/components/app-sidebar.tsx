@@ -30,6 +30,7 @@ import * as productions from '@/actions/App/Http/Controllers/ProduksiController'
 import * as stockCorrections from '@/actions/App/Http/Controllers/KoreksiStokController';
 import * as sales from '@/actions/App/Http/Controllers/PenjualanController';
 import * as receivables from '@/actions/App/Http/Controllers/PiutangController';
+import * as reports from '@/actions/App/Http/Controllers/LaporanController';
 
 const mainNavItems: NavItem[] = [
     {
@@ -132,17 +133,17 @@ const productionNavItems: NavItem[] = [
 const reportNavItems: NavItem[] = [
     {
         title: 'Laba Rugi',
-        href: dashboard(),
+        href: reports.incomeStatement(),
         icon: BookOpenText
     },
     {
         title: 'Arus Kas',
-        href: dashboard(),
+        href: reports.cashFlow(),
         icon: ArrowDownUp
     },
     {
         title: 'Posisi Keuangan',
-        href: dashboard(),
+        href: reports.balanceSheet(),
         icon: Scale
     },
 ]
