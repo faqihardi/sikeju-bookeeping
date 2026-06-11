@@ -26,6 +26,8 @@ import * as modals from '@/actions/App/Http/Controllers/ModalController';
 import * as expenses from '@/actions/App/Http/Controllers/PengeluaranOperasionalController';
 import * as purchases from '@/actions/App/Http/Controllers/PembelianController';
 import * as payables from '@/actions/App/Http/Controllers/HutangController';
+import * as productions from '@/actions/App/Http/Controllers/ProduksiController';
+import * as stockCorrections from '@/actions/App/Http/Controllers/KoreksiStokController';
 
 const mainNavItems: NavItem[] = [
     {
@@ -115,12 +117,12 @@ const salesNavItems: NavItem[] = [
 const productionNavItems: NavItem[] = [
     {
         title: 'Produksi',
-        href: dashboard(),
+        href: productions.index(),
         icon: CookingPot
     },
     {
         title: 'Koreksi Stok',
-        href: dashboard(),
+        href: stockCorrections.index(),
         icon: SearchCheck
     },
 ]
