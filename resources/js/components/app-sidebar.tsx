@@ -21,6 +21,9 @@ import * as suppliers from '@/actions/App/Http/Controllers/PemasokController';
 import * as customers from '@/actions/App/Http/Controllers/PelangganController';
 import * as equipments from '@/actions/App/Http/Controllers/PeralatanController';
 import * as paymentMethods from '@/actions/App/Http/Controllers/MetodePembayaranController';
+import * as cash from '@/actions/App/Http/Controllers/KasController';
+import * as modals from '@/actions/App/Http/Controllers/ModalController';
+import * as expenses from '@/actions/App/Http/Controllers/PengeluaranOperasionalController';
 
 const mainNavItems: NavItem[] = [
     {
@@ -66,17 +69,17 @@ const masterDataNavItems: NavItem[] = [
 const financeNavItems: NavItem[] = [
     {
         title: 'Kas',
-        href: dashboard(),
+        href: cash.index(),
         icon: Banknote
     },
     {
         title: 'Modal',
-        href: dashboard(),
+        href: modals.index(),
         icon: ChartCandlestick
     },
     {
         title: 'Biaya Operasional',
-        href: dashboard(),
+        href: expenses.index(),
         icon: Activity
     },
 ]
