@@ -29,6 +29,9 @@ class StoreProdukRequest extends FormRequest
             'satuan'=> 'required|string',
             'hpp' => 'required|numeric|min:0',
             'harga_jual' => 'required|numeric|min:0',
+            'recipe' => 'required|array|min:1',
+            'recipe.*.bahan_baku_id' => 'required|exists:bahan_bakus,id',
+            'recipe.*.qty' => 'required|integer|min:1',
         ];
     }
 }

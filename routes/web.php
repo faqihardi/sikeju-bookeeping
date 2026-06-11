@@ -13,6 +13,8 @@ use App\Http\Controllers\PengeluaranOperasionalController;
 use App\Http\Controllers\KasController;
 use App\Http\Controllers\PembelianController;
 use App\Http\Controllers\HutangController;
+use App\Http\Controllers\ProduksiController;
+use App\Http\Controllers\KoreksiStokController;
 
 Route::inertia('/', 'welcome')->name('home');
 
@@ -31,6 +33,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('purchases', PembelianController::class);
     Route::resource('payables', HutangController::class);
     Route::post('payables/{hutang}/pay', [HutangController::class, 'bayarCicilan'])->name('payables.pay');
+
+    Route::resource('productions', ProduksiController::class);
+    Route::resource('stock-corrections', KoreksiStokController::class);
 });
 
 require __DIR__.'/settings.php';

@@ -1,7 +1,6 @@
 import { useForm } from "@inertiajs/react"
 import { router } from "@inertiajs/react"
 import { toast } from "sonner"
-
 import { Button } from "@/components/ui/button"
 import {
     Field,
@@ -9,9 +8,28 @@ import {
     FieldLabel,
     FieldError,
 } from "@/components/ui/field"
-
 import { Input } from "@/components/ui/input"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Plus, Trash2 } from "lucide-react"
 import * as products from "@/actions/App/Http/Controllers/ProdukController"
+
+interface BahanBaku {
+    id: number
+    nama_bahan: string
+    satuan: string
+}
+
+interface ResepItem {
+    bahan_baku_id: number
+    qty: number
+}
 
 interface Props {
     product?: {
@@ -22,13 +40,21 @@ interface Props {
         hpp: number
         harga_jual: number
         satuan: string
+        reseps?: ResepItem[]
     }
     defaultKode?: string
+    bahanBakus: BahanBaku[]
+}
+
+interface FormRecipeItem {
+    bahan_baku_id: string
+    qty: string
 }
 
 export function ProdukForm({
     product,
-    defaultKode
+    defaultKode,
+    bahanBakus
 }: Props) {
 
     const isEdit = !!product
@@ -40,7 +66,26 @@ export function ProdukForm({
         hpp: product?.hpp ?? "",
         harga_jual: product?.harga_jual ?? "",
         satuan: product?.satuan ?? "",
+        recipe: product?.reseps?.map(r => ({
+            bahan_baku_id: String(r.bahan_baku_id),
+            qty: String(r.qty)
+        })) || [{ bahan_baku_id: "", qty: "" }] as FormRecipeItem[]
     })
+
+    function addRecipeItem() {
+        form.setData('recipe', [...form.data.recipe, { bahan_baku_id: '', qty: '' }]);
+    }
+
+    function removeRecipeItem(index: number) {
+        if (form.data.recipe.length === 1) return;
+        form.setData('recipe', form.data.recipe.filter((_, i) => i !== index));
+    }
+
+    function updateRecipeItem(index: number, field: 'bahan_baku_id' | 'qty', value: string) {
+        const updated = [...form.data.recipe];
+        updated[index] = { ...updated[index], [field]: value };
+        form.setData('recipe', updated);
+    }
 
     function submit(
         e: React.FormEvent<HTMLFormElement>
@@ -196,6 +241,83 @@ export function ProdukForm({
                         </FieldError>
                     )}
                 </Field>
+
+                {/* Resep Pemakaian Bahan Baku */}
+                <Card className="mt-6">
+                    <CardHeader className="flex flex-row items-center justify-between">
+                        <CardTitle className="text-sm font-semibold">Resep Kebutuhan Bahan Baku (per 1 unit Produk)</CardTitle>
+                        <Button type="button" variant="outline" size="sm" onClick={addRecipeItem}>
+                            <Plus className="h-4 w-4 mr-1" /> Tambah Bahan
+                        </Button>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-sm">
+                                <thead>
+                                    <tr className="border-b text-muted-foreground">
+                                        <th className="pb-2 text-left font-medium">Bahan Baku</th>
+                                        <th className="pb-2 text-left font-medium w-48">Qty Resep</th>
+                                        <th className="pb-2 w-10"></th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y">
+                                    {form.data.recipe.map((item, index) => (
+                                        <tr key={index}>
+                                            <td className="py-2 pr-2">
+                                                <Select
+                                                    value={item.bahan_baku_id}
+                                                    onValueChange={val => updateRecipeItem(index, 'bahan_baku_id', val)}
+                                                >
+                                                    <SelectTrigger className="w-full">
+                                                        <SelectValue placeholder="Pilih bahan baku" />
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        {bahanBakus.map(b => (
+                                                            <SelectItem key={b.id} value={String(b.id)}>
+                                                                {b.nama_bahan} ({b.satuan})
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                                {(form.errors as any)[`recipe.${index}.bahan_baku_id`] && (
+                                                    <p className="text-xs text-destructive mt-1">{(form.errors as any)[`recipe.${index}.bahan_baku_id`]}</p>
+                                                )}
+                                            </td>
+                                            <td className="py-2 pr-2">
+                                                <Input
+                                                    type="number"
+                                                    min="1"
+                                                    placeholder="0"
+                                                    value={item.qty}
+                                                    onChange={e => updateRecipeItem(index, 'qty', e.target.value)}
+                                                />
+                                                {(form.errors as any)[`recipe.${index}.qty`] && (
+                                                    <p className="text-xs text-destructive mt-1">{(form.errors as any)[`recipe.${index}.qty`]}</p>
+                                                )}
+                                            </td>
+                                            <td className="py-2">
+                                                <Button
+                                                    type="button"
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    onClick={() => removeRecipeItem(index)}
+                                                    disabled={form.data.recipe.length === 1}
+                                                    className="text-destructive hover:text-destructive"
+                                                >
+                                                    <Trash2 className="h-4 w-4" />
+                                                </Button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        {(form.errors as any)['recipe'] && (
+                            <p className="text-xs text-destructive mt-2">{(form.errors as any)['recipe']}</p>
+                        )}
+                    </CardContent>
+                </Card>
 
                 <div className="flex gap-4 mt-6">
                     <Button
