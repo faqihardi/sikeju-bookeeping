@@ -2,34 +2,41 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Pembelian extends Model
 {
-    protected $table = 'pembelians';
+    use HasFactory;
 
-    protected $guarded = [];
+    protected $guarded = ['id'];
 
-    public function metodePembayaran(): BelongsTo
-    {
-        return $this->belongsTo(MetodePembayaran::class);
-    }
-
-    public function pemasok(): BelongsTo
-    {
-        return $this->belongsTo(Pemasok::class);
-    }
-
-    public function detailPembelians(): HasMany
+    public function detailPembelians()
     {
         return $this->hasMany(DetailPembelian::class);
     }
 
-    public function hutang(): HasOne
+    public function pemasok()
+    {
+        return $this->belongsTo(Pemasok::class);
+    }
+
+    public function kas()
+    {
+        return $this->morphOne(Kas::class, 'kasable');
+    }
+
+    public function hutang()
     {
         return $this->hasOne(Hutang::class);
+    }
+
+    protected static function booted()
+    {
+        static::deleted(function ($pembelian) {
+            if ($pembelian->kas) {
+                $pembelian->kas->delete();
+            }
+        });
     }
 }

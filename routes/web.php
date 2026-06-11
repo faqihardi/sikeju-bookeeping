@@ -11,6 +11,8 @@ use App\Http\Controllers\MetodePembayaranController;
 use App\Http\Controllers\ModalController;
 use App\Http\Controllers\PengeluaranOperasionalController;
 use App\Http\Controllers\KasController;
+use App\Http\Controllers\PembelianController;
+use App\Http\Controllers\HutangController;
 
 Route::inertia('/', 'welcome')->name('home');
 
@@ -25,6 +27,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('modals', ModalController::class);
     Route::resource('operational-expenses', PengeluaranOperasionalController::class);
     Route::resource('cash', KasController::class);
+
+    Route::resource('purchases', PembelianController::class);
+    Route::resource('payables', HutangController::class);
+    Route::post('payables/{hutang}/pay', [HutangController::class, 'bayarCicilan'])->name('payables.pay');
 });
 
 require __DIR__.'/settings.php';
