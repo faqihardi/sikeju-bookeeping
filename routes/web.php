@@ -15,6 +15,8 @@ use App\Http\Controllers\PembelianController;
 use App\Http\Controllers\HutangController;
 use App\Http\Controllers\ProduksiController;
 use App\Http\Controllers\KoreksiStokController;
+use App\Http\Controllers\PenjualanController;
+use App\Http\Controllers\PiutangController;
 
 Route::inertia('/', 'welcome')->name('home');
 
@@ -36,6 +38,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('productions', ProduksiController::class);
     Route::resource('stock-corrections', KoreksiStokController::class);
+
+    Route::resource('sales', PenjualanController::class);
+    Route::resource('receivables', PiutangController::class);
+    Route::post('receivables/{piutang}/pay', [PiutangController::class, 'bayarCicilan'])->name('receivables.pay');
 });
 
 require __DIR__.'/settings.php';

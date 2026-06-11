@@ -32,4 +32,18 @@ class Penjualan extends Model
     {
         return $this->hasOne(Piutang::class);
     }
+
+    public function kas()
+    {
+        return $this->morphOne(Kas::class, 'kasable');
+    }
+
+    protected static function booted()
+    {
+        static::deleted(function ($penjualan) {
+            if ($penjualan->kas) {
+                $penjualan->kas->delete();
+            }
+        });
+    }
 }
