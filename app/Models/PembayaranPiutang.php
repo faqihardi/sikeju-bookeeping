@@ -15,4 +15,18 @@ class PembayaranPiutang extends Model
     {
         return $this->belongsTo(Piutang::class);
     }
+
+    public function kas()
+    {
+        return $this->morphOne(Kas::class, 'kasable');
+    }
+
+    protected static function booted()
+    {
+        static::deleted(function ($pembayaran) {
+            if ($pembayaran->kas) {
+                $pembayaran->kas->delete();
+            }
+        });
+    }
 }

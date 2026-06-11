@@ -28,6 +28,8 @@ import * as purchases from '@/actions/App/Http/Controllers/PembelianController';
 import * as payables from '@/actions/App/Http/Controllers/HutangController';
 import * as productions from '@/actions/App/Http/Controllers/ProduksiController';
 import * as stockCorrections from '@/actions/App/Http/Controllers/KoreksiStokController';
+import * as sales from '@/actions/App/Http/Controllers/PenjualanController';
+import * as receivables from '@/actions/App/Http/Controllers/PiutangController';
 
 const mainNavItems: NavItem[] = [
     {
@@ -104,12 +106,12 @@ const purchaseNavItems: NavItem[] = [
 const salesNavItems: NavItem[] = [
     {
         title: 'Transaksi Penjualan',
-        href: dashboard(),
-        icon: Weight
+        href: sales.index(),
+        icon: ShoppingCart
     },
     {
         title: 'Piutang Usaha',
-        href: dashboard(),
+        href: receivables.index(),
         icon: TrendingUp
     },
 ]
