@@ -58,7 +58,7 @@ class PengeluaranOperasionalController extends Controller
         ]);
     }
 
-    public function update(StorePengeluaranOperasionalRequest $request, PengeluaranOperasional $operationalExpense)
+    public function update(UpdatePengeluaranOperasionalRequest $request, PengeluaranOperasional $operationalExpense)
     {
         $data = $request->validated();
         $operationalExpense->update($data);
