@@ -24,6 +24,8 @@ import * as paymentMethods from '@/actions/App/Http/Controllers/MetodePembayaran
 import * as cash from '@/actions/App/Http/Controllers/KasController';
 import * as modals from '@/actions/App/Http/Controllers/ModalController';
 import * as expenses from '@/actions/App/Http/Controllers/PengeluaranOperasionalController';
+import * as purchases from '@/actions/App/Http/Controllers/PembelianController';
+import * as payables from '@/actions/App/Http/Controllers/HutangController';
 
 const mainNavItems: NavItem[] = [
     {
@@ -87,12 +89,12 @@ const financeNavItems: NavItem[] = [
 const purchaseNavItems: NavItem[] = [
     {
         title: 'Transaksi Pembelian',
-        href: dashboard(),
+        href: purchases.index(),
         icon: ShoppingCart
     },
     {
         title: 'Hutang Usaha',
-        href: dashboard(),
+        href: payables.index(),
         icon: TrendingDown
     },
 ]

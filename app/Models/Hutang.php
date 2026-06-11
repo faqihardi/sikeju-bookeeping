@@ -2,27 +2,21 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Hutang extends Model
 {
-    protected $table = 'hutangs';
+    use HasFactory;
 
-    protected $guarded = [];
+    protected $guarded = ['id'];
 
-    public function pembelian(): BelongsTo
+    public function pembelian()
     {
         return $this->belongsTo(Pembelian::class);
     }
 
-    public function peralatan(): BelongsTo
-    {
-        return $this->belongsTo(Peralatan::class);
-    }
-
-    public function pembayaranHutangs(): HasMany
+    public function pembayaranHutangs()
     {
         return $this->hasMany(PembayaranHutang::class);
     }

@@ -3,20 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class DetailPembelian extends Model
 {
-    protected $table = 'detail_pembelians';
+    protected $guarded = ['id'];
 
-    protected $guarded = [];
-
-    public function pembelian(): BelongsTo
+    public function pembelian()
     {
         return $this->belongsTo(Pembelian::class);
     }
 
-    public function bahanBaku(): BelongsTo
+    public function bahanBaku()
     {
         return $this->belongsTo(BahanBaku::class);
     }
