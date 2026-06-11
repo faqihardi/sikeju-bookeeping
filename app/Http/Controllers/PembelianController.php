@@ -73,7 +73,13 @@ class PembelianController extends Controller
 
             // 3. Evaluasi Jenis Pembayaran
             if ($validated['jenis_pembayaran'] === 'Tunai') {
-                $pembelian->kas()->create(['masuk' => 0, 'keluar' => $totalPembelian, 'sumber' => 'pembelian']);
+                $pembelian->kas()->create([
+                    'tanggal' => now()->toDateString(),
+                    'keterangan' => 'Pembelian Tunai: ' . $validated['nama_pembelian'],
+                    'masuk' => 0, 
+                    'keluar' => $totalPembelian, 
+                    'sumber' => 'pembelian'
+                ]);
             } else {
                 $pembelian->hutang()->create([
                     'nominal' => $totalPembelian,
@@ -84,5 +90,20 @@ class PembelianController extends Controller
         });
 
         return redirect()->route('purchases.index')->with('success', 'Transaksi Pembelian Berhasil Dicatat.');
+    }
+
+    public function destroy(Pembelian $purchase)
+    {
+        DB::transaction(function () use ($purchase) {
+            // Revert stok bahan baku
+            foreach ($purchase->detailPembelians as $detail) {
+                $detail->bahanBaku->decrement('stok', $detail->qty);
+            }
+            
+            // Delete Pembelian (this will trigger cascade deletes for detail_pembelians, hutangs, and the booted event for kas)
+            $purchase->delete();
+        });
+
+        return redirect()->route('purchases.index')->with('success', 'Transaksi Pembelian berhasil dihapus dan stok telah dikembalikan.');
     }
 }

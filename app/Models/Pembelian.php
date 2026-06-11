@@ -30,4 +30,13 @@ class Pembelian extends Model
     {
         return $this->hasOne(Hutang::class);
     }
+
+    protected static function booted()
+    {
+        static::deleted(function ($pembelian) {
+            if ($pembelian->kas) {
+                $pembelian->kas->delete();
+            }
+        });
+    }
 }

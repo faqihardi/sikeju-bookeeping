@@ -17,4 +17,13 @@ class PembayaranHutang extends Model
     {
         return $this->morphOne(Kas::class, 'kasable');
     }
+
+    protected static function booted()
+    {
+        static::deleted(function ($pembayaranHutang) {
+            if ($pembayaranHutang->kas) {
+                $pembayaranHutang->kas->delete();
+            }
+        });
+    }
 }

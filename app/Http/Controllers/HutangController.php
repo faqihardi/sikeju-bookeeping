@@ -32,7 +32,13 @@ class HutangController extends Controller
             ]);
 
             // 2. Potong Uang Kas
-            $pembayaran->kas()->create(['masuk' => 0, 'keluar' => $validated['nominal_bayar'], 'sumber' => 'hutang']);
+            $pembayaran->kas()->create([
+                'tanggal' => $validated['tanggal'],
+                'keterangan' => 'Pembayaran Cicilan Hutang',
+                'masuk' => 0, 
+                'keluar' => $validated['nominal_bayar'], 
+                'sumber' => 'hutang'
+            ]);
 
             // 3. Update status jika lunas
             $totalDibayar = $hutang->pembayaranHutangs()->sum('nominal_bayar');
