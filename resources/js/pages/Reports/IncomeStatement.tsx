@@ -136,8 +136,8 @@ export default function IncomeStatement({
                 </div>
 
                 {/* Structured Income Statement */}
-                <Card className="max-w-2xl mx-auto w-full shadow-md">
-                    <CardHeader className="border-b bg-muted/40 pb-4">
+                <Card className="max-w-2xl mx-auto w-full shadow-md overflow-hidden p-0 gap-0">
+                    <CardHeader className="border-b bg-muted/40 pt-6 pb-4 px-6">
                         <CardTitle className="text-center font-semibold text-lg">
                             LAPORAN LABA RUGI
                         </CardTitle>
@@ -145,7 +145,7 @@ export default function IncomeStatement({
                             Periode {startDate} s/d {endDate}
                         </p>
                     </CardHeader>
-                    <CardContent className="pt-6 space-y-6">
+                    <CardContent className="pt-6 px-6 pb-6 space-y-6">
                         
                         {/* PENDAPATAN */}
                         <div className="space-y-2">
@@ -199,7 +199,11 @@ export default function IncomeStatement({
                         </div>
 
                         {/* LABA BERSIH */}
-                        <div className="flex justify-between items-center p-4 bg-primary text-primary-foreground font-extrabold rounded-lg text-lg shadow-sm">
+                        <div className={`flex justify-between items-center p-4 border font-extrabold rounded-lg text-lg shadow-sm ${
+                            labaBersih >= 0 
+                                ? 'bg-emerald-500/10 dark:bg-emerald-500/25 border-emerald-500/30 text-emerald-800 dark:text-emerald-300' 
+                                : 'bg-destructive/10 dark:bg-destructive/25 border-destructive/30 text-destructive'
+                        }`}>
                             <span>LABA BERSIH OPERASIONAL</span>
                             <span>{formatRupiah(labaBersih)}</span>
                         </div>

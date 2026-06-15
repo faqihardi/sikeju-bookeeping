@@ -112,7 +112,7 @@ export default function CashFlow({
 
                 {/* Summary Cards */}
                 <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-                    <Card>
+                    <Card className="overflow-hidden shadow-sm">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <CardTitle className="text-sm font-medium text-muted-foreground">Saldo Awal</CardTitle>
                             <Wallet className="h-4 w-4 text-muted-foreground" />
@@ -122,7 +122,7 @@ export default function CashFlow({
                         </CardContent>
                     </Card>
 
-                    <Card>
+                    <Card className="overflow-hidden shadow-sm">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <CardTitle className="text-sm font-medium text-green-600">Total Kas Masuk</CardTitle>
                             <TrendingUp className="h-4 w-4 text-green-600" />
@@ -132,7 +132,7 @@ export default function CashFlow({
                         </CardContent>
                     </Card>
 
-                    <Card>
+                    <Card className="overflow-hidden shadow-sm">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <CardTitle className="text-sm font-medium text-destructive">Total Kas Keluar</CardTitle>
                             <TrendingDown className="h-4 w-4 text-destructive" />
@@ -142,7 +142,7 @@ export default function CashFlow({
                         </CardContent>
                     </Card>
 
-                    <Card className="bg-primary/5 dark:bg-primary/10 border-primary/20">
+                    <Card className="overflow-hidden shadow-sm bg-primary/5 dark:bg-primary/10 border-primary/20">
                         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                             <CardTitle className="text-sm font-medium text-primary">Saldo Akhir Kas</CardTitle>
                             <ArrowDownUp className="h-4 w-4 text-primary" />
@@ -156,14 +156,14 @@ export default function CashFlow({
                 {/* Detailed Table */}
                 <div className="grid gap-6 grid-cols-1 lg:grid-cols-2">
                     {/* Inflow Details */}
-                    <Card className="shadow-sm">
-                        <CardHeader className="border-b bg-muted/40 pb-4">
+                    <Card className="shadow-sm overflow-hidden h-full flex flex-col p-0 gap-0">
+                        <CardHeader className="border-b bg-muted/40 pt-6 pb-4 px-6">
                             <CardTitle className="text-base font-semibold flex items-center gap-2">
                                 <TrendingUp className="h-4 w-4 text-green-600" />
                                 Rincian Arus Kas Masuk (Inflow)
                             </CardTitle>
                         </CardHeader>
-                        <CardContent className="p-0">
+                        <CardContent className="p-0 flex-1 flex flex-col justify-between">
                             <Table>
                                 <TableHeader>
                                     <TableRow>
@@ -188,24 +188,24 @@ export default function CashFlow({
                                         <TableCell className="font-medium">Lainnya / Penyesuaian Manual</TableCell>
                                         <TableCell className="text-right text-green-600 font-medium">{formatRupiah(inflows.lainnya)}</TableCell>
                                     </TableRow>
-                                    <TableRow className="bg-muted/50 font-bold">
-                                        <TableCell>Total Kas Masuk</TableCell>
-                                        <TableCell className="text-right text-green-600">{formatRupiah(totalInflow)}</TableCell>
-                                    </TableRow>
                                 </TableBody>
                             </Table>
+                            <div className="border-t bg-emerald-500/10 dark:bg-emerald-500/20 border-emerald-500/30 px-6 py-4 font-bold flex justify-between items-center text-sm">
+                                <span>Total Kas Masuk</span>
+                                <span className="text-emerald-700 dark:text-emerald-400 text-base">{formatRupiah(totalInflow)}</span>
+                            </div>
                         </CardContent>
                     </Card>
 
                     {/* Outflow Details */}
-                    <Card className="shadow-sm">
-                        <CardHeader className="border-b bg-muted/40 pb-4">
+                    <Card className="shadow-sm overflow-hidden h-full flex flex-col p-0 gap-0">
+                        <CardHeader className="border-b bg-muted/40 pt-6 pb-4 px-6">
                             <CardTitle className="text-base font-semibold flex items-center gap-2">
                                 <TrendingDown className="h-4 w-4 text-destructive" />
                                 Rincian Arus Kas Keluar (Outflow)
                             </CardTitle>
                         </CardHeader>
-                        <CardContent className="p-0">
+                        <CardContent className="p-0 flex-1 flex flex-col justify-between">
                             <Table>
                                 <TableHeader>
                                     <TableRow>
@@ -234,12 +234,12 @@ export default function CashFlow({
                                         <TableCell className="font-medium">Lainnya / Penyesuaian Manual</TableCell>
                                         <TableCell className="text-right text-destructive font-medium">{formatRupiah(outflows.lainnya)}</TableCell>
                                     </TableRow>
-                                    <TableRow className="bg-muted/50 font-bold">
-                                        <TableCell>Total Kas Keluar</TableCell>
-                                        <TableCell className="text-right text-destructive">{formatRupiah(totalOutflow)}</TableCell>
-                                    </TableRow>
                                 </TableBody>
                             </Table>
+                            <div className="border-t bg-destructive/10 dark:bg-destructive/20 border-destructive/30 px-6 py-4 font-bold flex justify-between items-center text-sm">
+                                <span>Total Kas Keluar</span>
+                                <span className="text-destructive dark:text-red-400 text-base">{formatRupiah(totalOutflow)}</span>
+                            </div>
                         </CardContent>
                     </Card>
                 </div>

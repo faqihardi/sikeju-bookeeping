@@ -117,55 +117,56 @@ export default function BalanceSheet({
                 <div className="grid gap-6 grid-cols-1 lg:grid-cols-2 max-w-5xl mx-auto w-full">
                     
                     {/* AKTIVA / ASET */}
-                    <Card className="shadow-md">
-                        <CardHeader className="border-b bg-muted/40 pb-4">
+                    <Card className="shadow-md overflow-hidden h-full flex flex-col p-0 gap-0">
+                        <CardHeader className="border-b bg-muted/40 pt-6 pb-4 px-6">
                             <CardTitle className="text-base font-semibold flex items-center gap-2">
                                 <Scale className="h-4 w-4 text-primary" />
                                 Aset (Aktiva)
                             </CardTitle>
                         </CardHeader>
-                        <CardContent className="pt-6 space-y-6">
-                            
-                            {/* ASET LANCAR */}
-                            <div className="space-y-2">
-                                <h4 className="font-bold text-xs text-muted-foreground tracking-wider uppercase">Aset Lancar</h4>
-                                <div className="flex justify-between items-center text-sm border-b py-2 pl-4">
-                                    <span>Kas & Bank</span>
-                                    <span className="font-semibold">{formatRupiah(assets.kas)}</span>
+                        <CardContent className="pt-6 px-6 pb-6 flex-1 flex flex-col justify-between">
+                            <div className="space-y-6">
+                                {/* ASET LANCAR */}
+                                <div className="space-y-2">
+                                    <h4 className="font-bold text-xs text-muted-foreground tracking-wider uppercase">Aset Lancar</h4>
+                                    <div className="flex justify-between items-center text-sm border-b py-2 pl-4">
+                                        <span>Kas & Bank</span>
+                                        <span className="font-semibold">{formatRupiah(assets.kas)}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center text-sm border-b py-2 pl-4">
+                                        <span>Piutang Dagang / Usaha</span>
+                                        <span className="font-semibold">{formatRupiah(assets.piutang)}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center text-sm border-b py-2 pl-4">
+                                        <span>Persediaan Bahan Baku</span>
+                                        <span className="font-semibold">{formatRupiah(assets.persediaanBahan)}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center text-sm border-b py-2 pl-4">
+                                        <span>Persediaan Produk Jadi</span>
+                                        <span className="font-semibold">{formatRupiah(assets.persediaanProduk)}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center text-sm font-bold bg-muted/30 p-2 rounded">
+                                        <span>Total Aset Lancar</span>
+                                        <span>{formatRupiah(assets.totalAsetLancar)}</span>
+                                    </div>
                                 </div>
-                                <div className="flex justify-between items-center text-sm border-b py-2 pl-4">
-                                    <span>Piutang Dagang / Usaha</span>
-                                    <span className="font-semibold">{formatRupiah(assets.piutang)}</span>
-                                </div>
-                                <div className="flex justify-between items-center text-sm border-b py-2 pl-4">
-                                    <span>Persediaan Bahan Baku</span>
-                                    <span className="font-semibold">{formatRupiah(assets.persediaanBahan)}</span>
-                                </div>
-                                <div className="flex justify-between items-center text-sm border-b py-2 pl-4">
-                                    <span>Persediaan Produk Jadi</span>
-                                    <span className="font-semibold">{formatRupiah(assets.persediaanProduk)}</span>
-                                </div>
-                                <div className="flex justify-between items-center text-sm font-bold bg-muted/30 p-2 rounded">
-                                    <span>Total Aset Lancar</span>
-                                    <span>{formatRupiah(assets.totalAsetLancar)}</span>
-                                </div>
-                            </div>
 
-                            {/* ASET TETAP */}
-                            <div className="space-y-2">
-                                <h4 className="font-bold text-xs text-muted-foreground tracking-wider uppercase">Aset Tetap</h4>
-                                <div className="flex justify-between items-center text-sm border-b py-2 pl-4">
-                                    <span>Peralatan & Mesin</span>
-                                    <span className="font-semibold">{formatRupiah(assets.peralatan)}</span>
-                                </div>
-                                <div className="flex justify-between items-center text-sm font-bold bg-muted/30 p-2 rounded">
-                                    <span>Total Aset Tetap</span>
-                                    <span>{formatRupiah(assets.peralatan)}</span>
+                                {/* ASET TETAP */}
+                                <div className="space-y-2">
+                                    <h4 className="font-bold text-xs text-muted-foreground tracking-wider uppercase">Aset Tetap</h4>
+                                    <div className="flex justify-between items-center text-sm border-b py-2 pl-4">
+                                        <span>Peralatan & Mesin</span>
+                                        <span className="font-semibold">{formatRupiah(assets.peralatan)}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center text-sm font-bold bg-muted/30 p-2 rounded">
+                                        <span>Total Aset Tetap</span>
+                                        <span>{formatRupiah(assets.peralatan)}</span>
+                                    </div>
                                 </div>
                             </div>
 
                             {/* TOTAL AKTIVA */}
-                            <div className="flex justify-between items-center p-4 bg-primary text-primary-foreground font-extrabold rounded-lg text-lg shadow-sm">
+                            <div className="flex justify-between items-center p-4 bg-primary/10 dark:bg-primary/20 border border-primary/30 text-primary font-extrabold rounded-lg text-lg shadow-sm mt-6">
                                 <span>TOTAL ASET (AKTIVA)</span>
                                 <span>{formatRupiah(assets.totalAset)}</span>
                             </div>
@@ -174,47 +175,48 @@ export default function BalanceSheet({
                     </Card>
 
                     {/* KEWAJIBAN & EKUITAS */}
-                    <Card className="shadow-md">
-                        <CardHeader className="border-b bg-muted/40 pb-4">
+                    <Card className="shadow-md overflow-hidden h-full flex flex-col p-0 gap-0">
+                        <CardHeader className="border-b bg-muted/40 pt-6 pb-4 px-6">
                             <CardTitle className="text-base font-semibold flex items-center gap-2">
                                 <Scale className="h-4 w-4 text-primary" />
                                 Kewajiban & Ekuitas (Pasiva)
                             </CardTitle>
                         </CardHeader>
-                        <CardContent className="pt-6 space-y-6">
-                            
-                            {/* KEWAJIBAN */}
-                            <div className="space-y-2">
-                                <h4 className="font-bold text-xs text-muted-foreground tracking-wider uppercase">Kewajiban / Liabilitas</h4>
-                                <div className="flex justify-between items-center text-sm border-b py-2 pl-4">
-                                    <span>Hutang Usaha</span>
-                                    <span className="font-semibold">{formatRupiah(liabilities.hutang)}</span>
+                        <CardContent className="pt-6 px-6 pb-6 flex-1 flex flex-col justify-between">
+                            <div className="space-y-6">
+                                {/* KEWAJIBAN */}
+                                <div className="space-y-2">
+                                    <h4 className="font-bold text-xs text-muted-foreground tracking-wider uppercase">Kewajiban / Liabilitas</h4>
+                                    <div className="flex justify-between items-center text-sm border-b py-2 pl-4">
+                                        <span>Hutang Usaha</span>
+                                        <span className="font-semibold">{formatRupiah(liabilities.hutang)}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center text-sm font-bold bg-muted/30 p-2 rounded">
+                                        <span>Total Kewajiban</span>
+                                        <span>{formatRupiah(liabilities.hutang)}</span>
+                                    </div>
                                 </div>
-                                <div className="flex justify-between items-center text-sm font-bold bg-muted/30 p-2 rounded">
-                                    <span>Total Kewajiban</span>
-                                    <span>{formatRupiah(liabilities.hutang)}</span>
-                                </div>
-                            </div>
 
-                            {/* EKUITAS */}
-                            <div className="space-y-2">
-                                <h4 className="font-bold text-xs text-muted-foreground tracking-wider uppercase">Ekuitas (Modal)</h4>
-                                <div className="flex justify-between items-center text-sm border-b py-2 pl-4">
-                                    <span>Modal Disetor (Owner)</span>
-                                    <span className="font-semibold">{formatRupiah(equity.modal)}</span>
-                                </div>
-                                <div className="flex justify-between items-center text-sm border-b py-2 pl-4">
-                                    <span>Laba Ditahan / Berjalan</span>
-                                    <span className="font-semibold">{formatRupiah(equity.labaDitahan)}</span>
-                                </div>
-                                <div className="flex justify-between items-center text-sm font-bold bg-muted/30 p-2 rounded">
-                                    <span>Total Ekuitas</span>
-                                    <span>{formatRupiah(equity.totalEkuitas)}</span>
+                                {/* EKUITAS */}
+                                <div className="space-y-2">
+                                    <h4 className="font-bold text-xs text-muted-foreground tracking-wider uppercase">Ekuitas (Modal)</h4>
+                                    <div className="flex justify-between items-center text-sm border-b py-2 pl-4">
+                                        <span>Modal Disetor (Owner)</span>
+                                        <span className="font-semibold">{formatRupiah(equity.modal)}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center text-sm border-b py-2 pl-4">
+                                        <span>Laba Ditahan / Berjalan</span>
+                                        <span className="font-semibold">{formatRupiah(equity.labaDitahan)}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center text-sm font-bold bg-muted/30 p-2 rounded">
+                                        <span>Total Ekuitas</span>
+                                        <span>{formatRupiah(equity.totalEkuitas)}</span>
+                                    </div>
                                 </div>
                             </div>
 
                             {/* TOTAL PASIVA */}
-                            <div className="flex justify-between items-center p-4 bg-primary text-primary-foreground font-extrabold rounded-lg text-lg shadow-sm">
+                            <div className="flex justify-between items-center p-4 bg-primary/10 dark:bg-primary/20 border border-primary/30 text-primary font-extrabold rounded-lg text-lg shadow-sm mt-6">
                                 <span>TOTAL PASIVA</span>
                                 <span>{formatRupiah(totalKewajibanDanEkuitas)}</span>
                             </div>
