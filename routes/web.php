@@ -17,6 +17,7 @@ use App\Http\Controllers\ProduksiController;
 use App\Http\Controllers\KoreksiStokController;
 use App\Http\Controllers\PenjualanController;
 use App\Http\Controllers\PiutangController;
+use App\Http\Controllers\LaporanController;
 
 Route::inertia('/', 'welcome')->name('home');
 
@@ -42,6 +43,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('sales', PenjualanController::class);
     Route::resource('receivables', PiutangController::class);
     Route::post('receivables/{piutang}/pay', [PiutangController::class, 'bayarCicilan'])->name('receivables.pay');
+
+    Route::get('reports/cash-flow', [LaporanController::class, 'cashFlow'])->name('reports.cash-flow');
+    Route::get('reports/income-statement', [LaporanController::class, 'incomeStatement'])->name('reports.income-statement');
+    Route::get('reports/balance-sheet', [LaporanController::class, 'balanceSheet'])->name('reports.balance-sheet');
 });
 
 require __DIR__.'/settings.php';
