@@ -18,11 +18,12 @@ use App\Http\Controllers\KoreksiStokController;
 use App\Http\Controllers\PenjualanController;
 use App\Http\Controllers\PiutangController;
 use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\DashboardController;
 
 Route::inertia('/', 'welcome')->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::inertia('dashboard', 'dashboard')->name('dashboard');
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('materials', BahanBakuController::class);
     Route::resource('products', ProdukController::class);
     Route::resource('suppliers', PemasokController::class);
