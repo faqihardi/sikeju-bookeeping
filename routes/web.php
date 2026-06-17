@@ -48,6 +48,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('reports/cash-flow', [LaporanController::class, 'cashFlow'])->name('reports.cash-flow');
     Route::get('reports/income-statement', [LaporanController::class, 'incomeStatement'])->name('reports.income-statement');
     Route::get('reports/balance-sheet', [LaporanController::class, 'balanceSheet'])->name('reports.balance-sheet');
+    Route::get('reports/tax', [LaporanController::class, 'taxReport'])->name('reports.tax');
 });
 
 require __DIR__.'/settings.php';

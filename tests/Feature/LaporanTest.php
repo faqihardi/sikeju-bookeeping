@@ -146,3 +146,48 @@ test('can render balance sheet page and evaluates balance equation', function ()
             ->where('isBalanced', true)
         );
 });
+
+test('can render tax report page and calculates correct flat 0.5% tax for CV', function () {
+    // 1. Create sales
+    $sales = Penjualan::create([
+        'pelanggan_id' => $this->pelanggan->id,
+        'metode_pembayaran_id' => $this->metode->id,
+        'no_faktur' => 'INV-001',
+        'total' => 100000,
+        'created_at' => now(),
+    ]);
+
+    $sales->detailPenjualans()->create([
+        'produk_id' => $this->produk->id,
+        'qty' => 1,
+        'harga_satuan' => 100000,
+        'subtotal' => 100000,
+    ]);
+
+    // 2. Create paid tax in operational expenses
+    PengeluaranOperasional::create([
+        'tanggal' => now()->toDateString(),
+        'kategori' => 'Pajak',
+        'nominal' => 200,
+        'keterangan' => 'Bayar PPh Januari',
+    ]);
+
+    // 3. Access tax report route
+    $response = $this->get(route('reports.tax', ['year' => now()->year]));
+
+    // Expected:
+    // Omzet = 100000
+    // Tax (0.5% flat) = 500
+    // Paid = 200
+
+    $response->assertStatus(200)
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('Reports/TaxReport')
+            ->where('selectedYear', now()->year)
+            ->where('yearlyTotalOmzet', 100000)
+            ->where('yearlyTotalTax', 500)
+            ->where('yearlyTotalPaidTax', 200)
+            ->has('monthlyData')
+        );
+});
+
