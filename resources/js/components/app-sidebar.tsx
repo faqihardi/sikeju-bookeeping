@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { FolderGit2, LayoutGrid, Wheat, PackageSearch, TruckIcon, BookUser, Wrench, BadgeDollarSign, Banknote, ChartCandlestick, Activity, ShoppingCart, TrendingDown, TrendingUp, Weight, CookingPot, SearchCheck, BookOpenText, ArrowDownUp, Scale } from 'lucide-react';
+import { FolderGit2, LayoutGrid, Wheat, PackageSearch, TruckIcon, BookUser, Wrench, BadgeDollarSign, Banknote, ChartCandlestick, Activity, ShoppingCart, TrendingDown, TrendingUp, Weight, CookingPot, SearchCheck, BookOpenText, ArrowDownUp, Scale, ReceiptText } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -134,17 +134,22 @@ const reportNavItems: NavItem[] = [
     {
         title: 'Laba Rugi',
         href: reports.incomeStatement(),
-        icon: BookOpenText
+        icon: BookOpenText,
     },
     {
         title: 'Arus Kas',
         href: reports.cashFlow(),
-        icon: ArrowDownUp
+        icon: ArrowDownUp,
     },
     {
         title: 'Posisi Keuangan',
         href: reports.balanceSheet(),
-        icon: Scale
+        icon: Scale,
+    },
+    {
+        title: 'Pajak (PPh Final)',
+        href: reports.taxReport(),
+        icon: ReceiptText,
     },
 ]
 

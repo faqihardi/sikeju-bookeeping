@@ -184,4 +184,107 @@ class LaporanController extends Controller
             'isBalanced' => abs($totalAset - $totalKewajibanDanEkuitas) < 0.01,
         ]);
     }
+
+    public function taxReport(Request $request)
+    {
+        $selectedYear = $request->input('year', Carbon::now()->year);
+
+        $isSqlite = DB::connection()->getDriverName() === 'sqlite';
+        $yearSelect = $isSqlite ? "strftime('%Y', created_at)" : "YEAR(created_at)";
+        $monthSelect = $isSqlite ? "cast(strftime('%m', created_at) as integer)" : "MONTH(created_at)";
+        $monthSelectTanggal = $isSqlite ? "cast(strftime('%m', tanggal) as integer)" : "MONTH(tanggal)";
+
+        // Get available tax years dynamically from sales
+        $years = Penjualan::selectRaw("$yearSelect as year")
+            ->groupBy('year')
+            ->orderBy('year', 'desc')
+            ->pluck('year')
+            ->toArray();
+
+        if (empty($years)) {
+            $years = [(int) Carbon::now()->year];
+        } else {
+            $years = array_map('intval', $years);
+        }
+
+        // Ensure selected year is in years list
+        if (!in_array((int)$selectedYear, $years)) {
+            $years[] = (int)$selectedYear;
+            sort($years);
+            $years = array_reverse($years);
+        }
+
+        // Monthly sales aggregation for selected year
+        $monthlySales = Penjualan::selectRaw("$monthSelect as month, SUM(total) as omzet")
+            ->whereYear('created_at', $selectedYear)
+            ->groupBy(DB::raw($monthSelect))
+            ->pluck('omzet', 'month')
+            ->toArray();
+
+        // Monthly paid tax aggregation from pengeluaran_operasionals (kategori = 'Pajak' or keterangan contains 'pajak')
+        $paidTaxes = PengeluaranOperasional::whereYear('tanggal', $selectedYear)
+            ->where(function ($query) {
+                $query->where('kategori', 'Pajak')
+                    ->orWhere('keterangan', 'LIKE', '%pajak%');
+            })
+            ->selectRaw("$monthSelectTanggal as month, SUM(nominal) as total")
+            ->groupBy(DB::raw($monthSelectTanggal))
+            ->pluck('total', 'month')
+            ->toArray();
+
+        $months = [
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember'
+        ];
+
+        $yearlyTotalOmzet = 0;
+        $yearlyTotalTax = 0;
+        $yearlyTotalPaidTax = 0;
+        $monthlyData = [];
+
+        foreach ($months as $num => $name) {
+            $omzet = (float) ($monthlySales[$num] ?? 0);
+            $tax = $omzet * 0.005; // PPh Final 0.5%
+            $paid = (float) ($paidTaxes[$num] ?? 0);
+
+            $yearlyTotalOmzet += $omzet;
+            $yearlyTotalTax += $tax;
+            $yearlyTotalPaidTax += $paid;
+
+            // Due date: 15th of the following month
+            $nextMonthNum = $num === 12 ? 1 : $num + 1;
+            $nextMonthYear = $num === 12 ? $selectedYear + 1 : $selectedYear;
+            $nextMonthName = $months[$nextMonthNum];
+            $dueDate = "15 " . $nextMonthName . " " . $nextMonthYear;
+
+            $monthlyData[] = [
+                'month_number' => $num,
+                'month_name' => $name,
+                'omzet' => $omzet,
+                'tax' => $tax,
+                'paid' => $paid,
+                'due_date' => $dueDate,
+            ];
+        }
+
+        return Inertia::render('Reports/TaxReport', [
+            'selectedYear' => (int) $selectedYear,
+            'years' => $years,
+            'yearlyTotalOmzet' => $yearlyTotalOmzet,
+            'yearlyTotalTax' => $yearlyTotalTax,
+            'yearlyTotalPaidTax' => $yearlyTotalPaidTax,
+            'monthlyData' => $monthlyData,
+        ]);
+    }
 }
+
