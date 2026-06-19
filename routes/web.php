@@ -19,6 +19,7 @@ use App\Http\Controllers\PenjualanController;
 use App\Http\Controllers\PiutangController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\UserController;
 
 Route::inertia('/', 'welcome')->name('home');
 
@@ -53,6 +54,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('reports/balance-sheet/pdf', [LaporanController::class, 'balanceSheetPdf'])->name('reports.balance-sheet.pdf');
     Route::get('reports/tax', [LaporanController::class, 'taxReport'])->name('reports.tax');
     Route::get('reports/tax/pdf', [LaporanController::class, 'taxReportPdf'])->name('reports.tax.pdf');
+
+    // Route Admin
+    Route::middleware(['role:admin'])->group(function () {
+        Route::resource('users', UserController::class);
+    });
 });
 
 require __DIR__.'/settings.php';
