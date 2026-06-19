@@ -11,21 +11,13 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { formatRupiah, formatRupiahCompact } from '@/lib/utils';
 import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
-import { formatRupiah } from '@/lib/utils';
-import { 
-    Wallet, 
-    TrendingUp, 
-    TrendingDown, 
-    ArrowDownUp, 
-    AlertTriangle, 
+    Wallet,
+    TrendingUp,
+    TrendingDown,
+    ArrowDownUp,
+    AlertTriangle,
     Calendar,
     ArrowRight,
     ShoppingBag,
@@ -38,16 +30,16 @@ import {
     CookingPot,
     Scale
 } from 'lucide-react';
-import { 
-    AreaChart, 
+import {
+    AreaChart,
     Area,
     BarChart,
-    Bar, 
-    XAxis, 
-    YAxis, 
-    CartesianGrid, 
-    Tooltip as ChartTooltip, 
-    Legend, 
+    Bar,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip as ChartTooltip,
+    Legend,
     ResponsiveContainer,
     PieChart,
     Pie,
@@ -274,7 +266,7 @@ export default function Dashboard({
         <>
             <Head title="Dashboard Utama" />
             <div className="flex h-full flex-1 flex-col gap-6 p-4 md:p-6">
-                
+
                 {/* Header Filter Section */}
                 <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between print:hidden">
                     <div>
@@ -375,7 +367,7 @@ export default function Dashboard({
 
                 {/* ROW 2: Laba/Rugi Donut, Income Line Chart, Cash Flow Donut */}
                 <div className="grid gap-6 grid-cols-1 lg:grid-cols-3">
-                    
+
                     {/* Laba / Rugi Donut Chart Widget */}
                     <Card className="shadow-sm overflow-hidden flex flex-col p-0 gap-0 min-h-[380px]">
                         <CardHeader className="border-b bg-muted/40 pt-6 pb-4 px-6">
@@ -410,7 +402,7 @@ export default function Dashboard({
                                     </span>
                                 </div>
                             </div>
-                            
+
                             <div className="space-y-2 mt-4 text-xs">
                                 <div className="flex justify-between items-center py-1 border-b">
                                     <span className="flex items-center gap-1.5 font-medium">
@@ -461,25 +453,25 @@ export default function Dashboard({
                                     >
                                         <defs>
                                             <linearGradient id="incomeColor" x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.2}/>
-                                                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                                                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.2} />
+                                                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
                                             </linearGradient>
                                         </defs>
                                         <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-muted" />
-                                        <XAxis 
-                                            dataKey="name" 
-                                            axisLine={false} 
-                                            tickLine={false} 
+                                        <XAxis
+                                            dataKey="name"
+                                            axisLine={false}
+                                            tickLine={false}
                                             className="text-[10px] fill-muted-foreground"
                                         />
                                         <ChartTooltip content={<CustomTooltip />} />
-                                        <Area 
-                                            type="monotone" 
-                                            dataKey="amount" 
-                                            stroke="#3b82f6" 
+                                        <Area
+                                            type="monotone"
+                                            dataKey="amount"
+                                            stroke="#3b82f6"
                                             strokeWidth={2.5}
-                                            fillOpacity={1} 
-                                            fill="url(#incomeColor)" 
+                                            fillOpacity={1}
+                                            fill="url(#incomeColor)"
                                         />
                                     </AreaChart>
                                 </ResponsiveContainer>
@@ -515,7 +507,7 @@ export default function Dashboard({
                                     </PieChart>
                                 </ResponsiveContainer>
                             </div>
-                            
+
                             <div className="grid grid-cols-3 gap-2 mt-4 text-[10px] text-center">
                                 {cashFlowComparison.map((item, index) => (
                                     <div key={index} className="space-y-1">
@@ -533,7 +525,7 @@ export default function Dashboard({
 
                 {/* ROW 3: Stacked Cash Flow (Double Sided) & Largest Outcomes */}
                 <div className="grid gap-6 grid-cols-1 lg:grid-cols-3">
-                    
+
                     {/* Two-Way Cash Flow Bar Chart */}
                     <Card className="shadow-sm overflow-hidden flex flex-col p-0 gap-0 lg:col-span-2 min-h-[420px]">
                         <CardHeader className="border-b bg-muted/40 pt-6 pb-4 px-6">
@@ -550,44 +542,44 @@ export default function Dashboard({
                                         margin={{ top: 20, right: 10, left: 10, bottom: 5 }}
                                     >
                                         <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-muted" />
-                                        <XAxis 
-                                            dataKey="name" 
-                                            axisLine={false} 
-                                            tickLine={false} 
+                                        <XAxis
+                                            dataKey="name"
+                                            axisLine={false}
+                                            tickLine={false}
                                             className="text-[10px] fill-muted-foreground"
                                         />
-                                        <YAxis 
-                                            axisLine={false} 
-                                            tickLine={false} 
+                                        <YAxis
+                                            axisLine={false}
+                                            tickLine={false}
                                             className="text-[10px] fill-muted-foreground"
-                                            tickFormatter={(val) => `Rp ${val / 1000}k`}
+                                            tickFormatter={formatRupiahCompact}
                                         />
                                         <ChartTooltip content={<CustomCashFlowTooltip />} />
-                                        <Legend 
-                                            verticalAlign="top" 
-                                            height={36} 
+                                        <Legend
+                                            verticalAlign="top"
+                                            height={36}
                                             iconType="circle"
                                             className="text-xs"
                                         />
-                                        <Bar 
-                                            name="Kas Masuk" 
-                                            dataKey="inflow" 
-                                            fill="#10b981" 
-                                            radius={[4, 4, 0, 0]} 
+                                        <Bar
+                                            name="Kas Masuk"
+                                            dataKey="inflow"
+                                            fill="#10b981"
+                                            radius={[4, 4, 0, 0]}
                                             maxBarSize={30}
                                         />
-                                        <Bar 
-                                            name="Kas Keluar" 
-                                            dataKey="outflow" 
-                                            fill="#ef4444" 
-                                            radius={[0, 0, 4, 4]} 
+                                        <Bar
+                                            name="Kas Keluar"
+                                            dataKey="outflow"
+                                            fill="#ef4444"
+                                            radius={[0, 0, 4, 4]}
                                             maxBarSize={30}
                                         />
-                                        <Line 
-                                            name="Kas Bersih" 
-                                            type="monotone" 
-                                            dataKey="net" 
-                                            stroke="#3b82f6" 
+                                        <Line
+                                            name="Kas Bersih"
+                                            type="monotone"
+                                            dataKey="net"
+                                            stroke="#3b82f6"
                                             strokeWidth={2}
                                             dot={false}
                                         />
@@ -631,14 +623,14 @@ export default function Dashboard({
                                     </div>
                                 )}
                             </div>
-                            
+
                             <div className="space-y-1.5 mt-4 text-[11px] max-h-36 overflow-y-auto pr-1">
                                 {outflowBreakdown.map((item, index) => (
                                     <div key={index} className="flex justify-between items-center py-1 border-b">
                                         <span className="flex items-center gap-1.5 font-medium">
-                                            <span 
-                                                className="h-2.5 w-2.5 rounded-full" 
-                                                style={{ backgroundColor: DOUGHNUT_COLORS[index % DOUGHNUT_COLORS.length] }} 
+                                            <span
+                                                className="h-2.5 w-2.5 rounded-full"
+                                                style={{ backgroundColor: DOUGHNUT_COLORS[index % DOUGHNUT_COLORS.length] }}
                                             />
                                             {item.name}
                                         </span>
@@ -653,7 +645,7 @@ export default function Dashboard({
 
                 {/* ROW 4: Best Sellers, Manufacture Efficiency, Mini Balance Sheet */}
                 <div className="grid gap-6 grid-cols-1 lg:grid-cols-3">
-                    
+
                     {/* Top Products Horizontal Bar Chart */}
                     <Card className="shadow-sm overflow-hidden flex flex-col p-0 gap-0 min-h-[380px] lg:col-span-2">
                         <CardHeader className="border-b bg-muted/40 pt-6 pb-4 px-6">
@@ -704,7 +696,7 @@ export default function Dashboard({
                                     >
                                         <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-muted" />
                                         <XAxis dataKey="name" axisLine={false} tickLine={false} className="text-xs font-semibold fill-muted-foreground" />
-                                        <YAxis axisLine={false} tickLine={false} className="text-[10px] fill-muted-foreground" tickFormatter={(val) => `Rp ${val/1000}k`} />
+                                        <YAxis axisLine={false} tickLine={false} className="text-[10px] fill-muted-foreground" tickFormatter={formatRupiahCompact} />
                                         <ChartTooltip formatter={(value: any) => formatRupiah(value)} />
                                         <Legend verticalAlign="top" height={36} iconType="circle" className="text-xs" />
                                         <Bar name="HPP Hasil Produksi" dataKey="Produk Jadi (HPP)" fill="#10b981" radius={[4, 4, 0, 0]} maxBarSize={40} />
@@ -722,7 +714,7 @@ export default function Dashboard({
 
                 {/* ROW 5: Mini Balance Sheet & Top Business Partners */}
                 <div className="grid gap-6 grid-cols-1 lg:grid-cols-3">
-                    
+
                     {/* Stacked Balance Sheet Chart */}
                     <Card className="shadow-sm overflow-hidden flex flex-col p-0 gap-0 min-h-[300px] lg:col-span-2">
                         <CardHeader className="border-b bg-muted/40 pt-6 pb-4 px-6">
@@ -750,7 +742,7 @@ export default function Dashboard({
                                         margin={{ top: 20, right: 30, left: 10, bottom: 5 }}
                                     >
                                         <CartesianGrid strokeDasharray="3 3" horizontal={false} className="stroke-muted" />
-                                        <XAxis type="number" axisLine={false} tickLine={false} className="text-[10px] fill-muted-foreground" tickFormatter={(val) => `Rp ${val/1000}k`} />
+                                        <XAxis type="number" axisLine={false} tickLine={false} className="text-[10px] fill-muted-foreground" tickFormatter={formatRupiahCompact} />
                                         <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} className="text-xs font-bold fill-foreground" width={110} />
                                         <ChartTooltip formatter={(value: any) => formatRupiah(value)} />
                                         <Legend verticalAlign="top" height={36} iconType="circle" className="text-xs" />
@@ -814,7 +806,7 @@ export default function Dashboard({
 
                 {/* ROW 6: Critical Materials & Receivables */}
                 <div className="grid gap-6 grid-cols-1 lg:grid-cols-2">
-                    
+
                     {/* Critical Materials */}
                     <Card className="shadow-sm overflow-hidden p-0 gap-0">
                         <CardHeader className="border-b bg-muted/40 pt-6 pb-4 px-6">
