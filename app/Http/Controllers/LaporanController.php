@@ -17,10 +17,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Inertia\Inertia;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class LaporanController extends Controller
 {
-    public function cashFlow(Request $request)
+    private function getCashFlowData(Request $request)
     {
         $startDate = $request->input('start_date', Carbon::now()->startOfMonth()->toDateString());
         $endDate = $request->input('end_date', Carbon::now()->endOfMonth()->toDateString());
@@ -69,7 +70,7 @@ class LaporanController extends Controller
 
         $saldoAkhir = $saldoAwal + $totalInflow - $totalOutflow;
 
-        return Inertia::render('Reports/CashFlow', [
+        return [
             'startDate' => $startDate,
             'endDate' => $endDate,
             'saldoAwal' => $saldoAwal,
@@ -78,10 +79,22 @@ class LaporanController extends Controller
             'totalInflow' => $totalInflow,
             'totalOutflow' => $totalOutflow,
             'saldoAkhir' => $saldoAkhir,
-        ]);
+        ];
     }
 
-    public function incomeStatement(Request $request)
+    public function cashFlow(Request $request)
+    {
+        return Inertia::render('Reports/CashFlow', $this->getCashFlowData($request));
+    }
+
+    public function cashFlowPdf(Request $request)
+    {
+        $data = $this->getCashFlowData($request);
+        $pdf = Pdf::loadView('pdf.cash-flow', $data);
+        return $pdf->download('Laporan_Arus_Kas_' . $data['startDate'] . '_to_' . $data['endDate'] . '.pdf');
+    }
+
+    private function getIncomeStatementData(Request $request)
     {
         $startDate = $request->input('start_date', Carbon::now()->startOfMonth()->toDateString());
         $endDate = $request->input('end_date', Carbon::now()->endOfMonth()->toDateString());
@@ -105,7 +118,7 @@ class LaporanController extends Controller
         // 5. Laba Bersih
         $labaBersih = $labaKotor - $operasional;
 
-        return Inertia::render('Reports/IncomeStatement', [
+        return [
             'startDate' => $startDate,
             'endDate' => $endDate,
             'pendapatan' => $pendapatan,
@@ -113,10 +126,22 @@ class LaporanController extends Controller
             'labaKotor' => $labaKotor,
             'operasional' => $operasional,
             'labaBersih' => $labaBersih,
-        ]);
+        ];
     }
 
-    public function balanceSheet(Request $request)
+    public function incomeStatement(Request $request)
+    {
+        return Inertia::render('Reports/IncomeStatement', $this->getIncomeStatementData($request));
+    }
+
+    public function incomeStatementPdf(Request $request)
+    {
+        $data = $this->getIncomeStatementData($request);
+        $pdf = Pdf::loadView('pdf.income-statement', $data);
+        return $pdf->download('Laporan_Laba_Rugi_' . $data['startDate'] . '_to_' . $data['endDate'] . '.pdf');
+    }
+
+    private function getBalanceSheetData(Request $request)
     {
         $date = $request->input('date', Carbon::now()->toDateString());
 
@@ -161,7 +186,7 @@ class LaporanController extends Controller
         $totalEkuitas = $modal + $labaDitahan;
         $totalKewajibanDanEkuitas = $hutang + $totalEkuitas;
 
-        return Inertia::render('Reports/BalanceSheet', [
+        return [
             'date' => $date,
             'assets' => [
                 'kas' => $kas,
@@ -182,10 +207,22 @@ class LaporanController extends Controller
             ],
             'totalKewajibanDanEkuitas' => $totalKewajibanDanEkuitas,
             'isBalanced' => abs($totalAset - $totalKewajibanDanEkuitas) < 0.01,
-        ]);
+        ];
     }
 
-    public function taxReport(Request $request)
+    public function balanceSheet(Request $request)
+    {
+        return Inertia::render('Reports/BalanceSheet', $this->getBalanceSheetData($request));
+    }
+
+    public function balanceSheetPdf(Request $request)
+    {
+        $data = $this->getBalanceSheetData($request);
+        $pdf = Pdf::loadView('pdf.balance-sheet', $data);
+        return $pdf->download('Laporan_Posisi_Keuangan_' . $data['date'] . '.pdf');
+    }
+
+    private function getTaxReportData(Request $request)
     {
         $selectedYear = $request->input('year', Carbon::now()->year);
 
@@ -277,14 +314,26 @@ class LaporanController extends Controller
             ];
         }
 
-        return Inertia::render('Reports/TaxReport', [
+        return [
             'selectedYear' => (int) $selectedYear,
             'years' => $years,
             'yearlyTotalOmzet' => $yearlyTotalOmzet,
             'yearlyTotalTax' => $yearlyTotalTax,
             'yearlyTotalPaidTax' => $yearlyTotalPaidTax,
             'monthlyData' => $monthlyData,
-        ]);
+        ];
+    }
+
+    public function taxReport(Request $request)
+    {
+        return Inertia::render('Reports/TaxReport', $this->getTaxReportData($request));
+    }
+
+    public function taxReportPdf(Request $request)
+    {
+        $data = $this->getTaxReportData($request);
+        $pdf = Pdf::loadView('pdf.tax-report', $data);
+        return $pdf->download('Laporan_Pajak_PPh_Final_' . $data['selectedYear'] . '.pdf');
     }
 }
 

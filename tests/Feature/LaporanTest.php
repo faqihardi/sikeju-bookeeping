@@ -191,3 +191,28 @@ test('can render tax report page and calculates correct flat 0.5% tax for CV', f
         );
 });
 
+test('can download cash flow PDF', function () {
+    $response = $this->get(route('reports.cash-flow.pdf'));
+    $response->assertStatus(200);
+    $response->assertHeader('content-type', 'application/pdf');
+});
+
+test('can download income statement PDF', function () {
+    $response = $this->get(route('reports.income-statement.pdf'));
+    $response->assertStatus(200);
+    $response->assertHeader('content-type', 'application/pdf');
+});
+
+test('can download balance sheet PDF', function () {
+    $response = $this->get(route('reports.balance-sheet.pdf'));
+    $response->assertStatus(200);
+    $response->assertHeader('content-type', 'application/pdf');
+});
+
+test('can download tax report PDF', function () {
+    $response = $this->get(route('reports.tax.pdf', ['year' => now()->year]));
+    $response->assertStatus(200);
+    $response->assertHeader('content-type', 'application/pdf');
+});
+
+

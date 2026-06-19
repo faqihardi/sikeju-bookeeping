@@ -72,7 +72,7 @@ export default function TaxReport({
     }
 
     function handlePrint() {
-        window.print();
+        window.open(reports.taxReportPdf({ query: { year } }).url, '_blank');
     }
 
     // Chart Data mapping

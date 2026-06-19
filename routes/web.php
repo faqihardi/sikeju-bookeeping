@@ -46,9 +46,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('receivables/{piutang}/pay', [PiutangController::class, 'bayarCicilan'])->name('receivables.pay');
 
     Route::get('reports/cash-flow', [LaporanController::class, 'cashFlow'])->name('reports.cash-flow');
+    Route::get('reports/cash-flow/pdf', [LaporanController::class, 'cashFlowPdf'])->name('reports.cash-flow.pdf');
     Route::get('reports/income-statement', [LaporanController::class, 'incomeStatement'])->name('reports.income-statement');
+    Route::get('reports/income-statement/pdf', [LaporanController::class, 'incomeStatementPdf'])->name('reports.income-statement.pdf');
     Route::get('reports/balance-sheet', [LaporanController::class, 'balanceSheet'])->name('reports.balance-sheet');
+    Route::get('reports/balance-sheet/pdf', [LaporanController::class, 'balanceSheetPdf'])->name('reports.balance-sheet.pdf');
     Route::get('reports/tax', [LaporanController::class, 'taxReport'])->name('reports.tax');
+    Route::get('reports/tax/pdf', [LaporanController::class, 'taxReportPdf'])->name('reports.tax.pdf');
 });
 
 require __DIR__.'/settings.php';

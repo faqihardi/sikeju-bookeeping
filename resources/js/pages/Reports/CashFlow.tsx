@@ -61,7 +61,7 @@ export default function CashFlow({
     }
 
     function handlePrint() {
-        window.print();
+        window.open(reports.cashFlowPdf({ query: { start_date: filterStart, end_date: filterEnd } }).url, '_blank');
     }
 
     return (

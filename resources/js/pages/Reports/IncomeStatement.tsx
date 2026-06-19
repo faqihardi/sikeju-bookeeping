@@ -40,7 +40,7 @@ export default function IncomeStatement({
     }
 
     function handlePrint() {
-        window.print();
+        window.open(reports.incomeStatementPdf({ query: { start_date: filterStart, end_date: filterEnd } }).url, '_blank');
     }
 
     const marginKotor = pendapatan > 0 ? (labaKotor / pendapatan) * 100 : 0;

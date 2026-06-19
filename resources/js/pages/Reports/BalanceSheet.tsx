@@ -50,7 +50,7 @@ export default function BalanceSheet({
     }
 
     function handlePrint() {
-        window.print();
+        window.open(reports.balanceSheetPdf({ query: { date: filterDate } }).url, '_blank');
     }
 
     return (
