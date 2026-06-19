@@ -25,7 +25,7 @@ interface Props {
         id: number
         name: string
         email: string
-        role: 'admin' | 'finance'
+        role: 'admin' | 'finance' | 'owner'
     }
 }
 
@@ -125,7 +125,7 @@ export function UserForm({
                         onValueChange={(val) =>
                             form.setData(
                                 "role",
-                                val as 'admin' | 'finance'
+                                val as 'admin' | 'finance' | 'owner'
                             )
                         }
                     >
@@ -134,10 +134,13 @@ export function UserForm({
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="admin">
-                                Admin / Owner
+                                Super Admin
                             </SelectItem>
                             <SelectItem value="finance">
                                 Finance Manager
+                            </SelectItem>
+                            <SelectItem value="owner">
+                                Owner
                             </SelectItem>
                         </SelectContent>
                     </Select>

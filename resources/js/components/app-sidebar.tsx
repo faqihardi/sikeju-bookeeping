@@ -165,6 +165,7 @@ const footerNavItems: NavItem[] = [
 export function AppSidebar() {
     const { auth } = usePage().props as any;
     const userRole = auth?.user?.role;
+    const isOwner = userRole === 'owner';
 
     return (
         <Sidebar collapsible="icon" variant="inset">
@@ -194,11 +195,15 @@ export function AppSidebar() {
                         group='Admin Root' 
                     />
                 )}
-                <NavMain items={masterDataNavItems} group='Master Data' />
-                <NavMain items={financeNavItems} group='Keuangan & Kas' />
-                <NavMain items={purchaseNavItems} group='Pembelian' />
-                <NavMain items={salesNavItems} group='Penjualan' />
-                <NavMain items={productionNavItems} group='Produksi' />
+                {!isOwner && (
+                    <>
+                        <NavMain items={masterDataNavItems} group='Master Data' />
+                        <NavMain items={financeNavItems} group='Keuangan & Kas' />
+                        <NavMain items={purchaseNavItems} group='Pembelian' />
+                        <NavMain items={salesNavItems} group='Penjualan' />
+                        <NavMain items={productionNavItems} group='Produksi' />
+                    </>
+                )}
                 <NavMain items={reportNavItems} group='Laporan' />
             </SidebarContent>
 

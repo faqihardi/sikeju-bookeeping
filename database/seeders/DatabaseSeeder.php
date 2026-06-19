@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
 
         User::factory()->create([
-            'name' => 'Owner Admin',
+            'name' => 'Super Admin',
             'email' => 'admin@sikeju.com',
             'password' => \Illuminate\Support\Facades\Hash::make('password'),
             'role' => 'admin',
@@ -29,6 +29,13 @@ class DatabaseSeeder extends Seeder
             'email' => 'finance@sikeju.com',
             'password' => \Illuminate\Support\Facades\Hash::make('password'),
             'role' => 'finance',
+        ]);
+
+        User::factory()->create([
+            'name' => 'Owner',
+            'email' => 'owner@sikeju.com',
+            'password' => \Illuminate\Support\Facades\Hash::make('password'),
+            'role' => 'owner',
         ]);
     }
 }

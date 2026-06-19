@@ -22,7 +22,7 @@ export type UserRow = {
   id: number
   name: string
   email: string
-  role: 'admin' | 'finance'
+  role: 'admin' | 'finance' | 'owner'
   updated_at: string
 }
 
@@ -64,7 +64,14 @@ export const columns: ColumnDef<UserRow>[] = [
       if (role === 'admin') {
         return (
           <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-100/80 border-amber-200 dark:bg-amber-950/40 dark:text-amber-400 dark:border-amber-900/50">
-            Admin/Owner
+            Super Admin
+          </Badge>
+        )
+      }
+      if (role === 'owner') {
+        return (
+          <Badge className="bg-emerald-100 text-emerald-800 hover:bg-emerald-100/80 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-900/50">
+            Owner
           </Badge>
         )
       }
