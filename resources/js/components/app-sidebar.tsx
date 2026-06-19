@@ -1,5 +1,5 @@
-import { Link } from '@inertiajs/react';
-import { FolderGit2, LayoutGrid, Wheat, PackageSearch, TruckIcon, BookUser, Wrench, BadgeDollarSign, Banknote, ChartCandlestick, Activity, ShoppingCart, TrendingDown, TrendingUp, Weight, CookingPot, SearchCheck, BookOpenText, ArrowDownUp, Scale, ReceiptText } from 'lucide-react';
+import { Link, usePage } from '@inertiajs/react';
+import { FolderGit2, LayoutGrid, Wheat, PackageSearch, TruckIcon, BookUser, Wrench, BadgeDollarSign, Banknote, ChartCandlestick, Activity, ShoppingCart, TrendingDown, TrendingUp, Weight, CookingPot, SearchCheck, BookOpenText, ArrowDownUp, Scale, ReceiptText, Users } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -31,6 +31,7 @@ import * as stockCorrections from '@/actions/App/Http/Controllers/KoreksiStokCon
 import * as sales from '@/actions/App/Http/Controllers/PenjualanController';
 import * as receivables from '@/actions/App/Http/Controllers/PiutangController';
 import * as reports from '@/actions/App/Http/Controllers/LaporanController';
+import * as users from '@/actions/App/Http/Controllers/UserController';
 
 const mainNavItems: NavItem[] = [
     {
@@ -162,6 +163,9 @@ const footerNavItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
+    const { auth } = usePage().props as any;
+    const userRole = auth?.user?.role;
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
@@ -178,6 +182,18 @@ export function AppSidebar() {
 
             <SidebarContent>
                 <NavMain items={mainNavItems} group='Platform' />
+                {userRole === 'admin' && (
+                    <NavMain 
+                        items={[
+                            {
+                                title: 'Manajemen Pengguna',
+                                href: users.index(),
+                                icon: Users,
+                            }
+                        ]} 
+                        group='Admin Root' 
+                    />
+                )}
                 <NavMain items={masterDataNavItems} group='Master Data' />
                 <NavMain items={financeNavItems} group='Keuangan & Kas' />
                 <NavMain items={purchaseNavItems} group='Pembelian' />
