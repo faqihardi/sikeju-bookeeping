@@ -30,39 +30,24 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // -----------------------------------------------------------------------
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Master Data – index/show (semua role bisa baca)
+    // Master Data – index (semua role bisa baca)
     Route::get('materials', [BahanBakuController::class, 'index'])->name('materials.index');
-    Route::get('materials/{material}', [BahanBakuController::class, 'show'])->name('materials.show');
     Route::get('products', [ProdukController::class, 'index'])->name('products.index');
-    Route::get('products/{product}', [ProdukController::class, 'show'])->name('products.show');
     Route::get('suppliers', [PemasokController::class, 'index'])->name('suppliers.index');
-    Route::get('suppliers/{supplier}', [PemasokController::class, 'show'])->name('suppliers.show');
     Route::get('customers', [PelangganController::class, 'index'])->name('customers.index');
-    Route::get('customers/{customer}', [PelangganController::class, 'show'])->name('customers.show');
     Route::get('equipments', [PeralatanController::class, 'index'])->name('equipments.index');
-    Route::get('equipments/{equipment}', [PeralatanController::class, 'show'])->name('equipments.show');
     Route::get('payment-methods', [MetodePembayaranController::class, 'index'])->name('payment-methods.index');
-    Route::get('payment-methods/{payment_method}', [MetodePembayaranController::class, 'show'])->name('payment-methods.show');
     Route::get('modals', [ModalController::class, 'index'])->name('modals.index');
-    Route::get('modals/{modal}', [ModalController::class, 'show'])->name('modals.show');
     Route::get('operational-expenses', [PengeluaranOperasionalController::class, 'index'])->name('operational-expenses.index');
-    Route::get('operational-expenses/{operational_expense}', [PengeluaranOperasionalController::class, 'show'])->name('operational-expenses.show');
     Route::get('cash', [KasController::class, 'index'])->name('cash.index');
-    Route::get('cash/{cash}', [KasController::class, 'show'])->name('cash.show');
 
-    // Transaksi – index/show
+    // Transaksi – index
     Route::get('purchases', [PembelianController::class, 'index'])->name('purchases.index');
-    Route::get('purchases/{purchase}', [PembelianController::class, 'show'])->name('purchases.show');
     Route::get('payables', [HutangController::class, 'index'])->name('payables.index');
-    Route::get('payables/{payable}', [HutangController::class, 'show'])->name('payables.show');
     Route::get('productions', [ProduksiController::class, 'index'])->name('productions.index');
-    Route::get('productions/{production}', [ProduksiController::class, 'show'])->name('productions.show');
     Route::get('stock-corrections', [KoreksiStokController::class, 'index'])->name('stock-corrections.index');
-    Route::get('stock-corrections/{stock_correction}', [KoreksiStokController::class, 'show'])->name('stock-corrections.show');
     Route::get('sales', [PenjualanController::class, 'index'])->name('sales.index');
-    Route::get('sales/{sale}', [PenjualanController::class, 'show'])->name('sales.show');
     Route::get('receivables', [PiutangController::class, 'index'])->name('receivables.index');
-    Route::get('receivables/{receivable}', [PiutangController::class, 'show'])->name('receivables.show');
 
     // Laporan (semua role bisa akses, termasuk owner)
     Route::get('reports/cash-flow', [LaporanController::class, 'cashFlow'])->name('reports.cash-flow');
@@ -152,6 +137,27 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::post('receivables/{piutang}/pay', [PiutangController::class, 'bayarCicilan'])->name('receivables.pay');
     });
+
+    // -----------------------------------------------------------------------
+    // Routes SHOW – (semua role bisa baca parameter ID)
+    // HARUS di bawah 'create' route agar /create tidak terdeteksi sebagai {id}
+    // -----------------------------------------------------------------------
+    Route::get('materials/{material}', [BahanBakuController::class, 'show'])->name('materials.show');
+    Route::get('products/{product}', [ProdukController::class, 'show'])->name('products.show');
+    Route::get('suppliers/{supplier}', [PemasokController::class, 'show'])->name('suppliers.show');
+    Route::get('customers/{customer}', [PelangganController::class, 'show'])->name('customers.show');
+    Route::get('equipments/{equipment}', [PeralatanController::class, 'show'])->name('equipments.show');
+    Route::get('payment-methods/{payment_method}', [MetodePembayaranController::class, 'show'])->name('payment-methods.show');
+    Route::get('modals/{modal}', [ModalController::class, 'show'])->name('modals.show');
+    Route::get('operational-expenses/{operational_expense}', [PengeluaranOperasionalController::class, 'show'])->name('operational-expenses.show');
+    Route::get('cash/{cash}', [KasController::class, 'show'])->name('cash.show');
+
+    Route::get('purchases/{purchase}', [PembelianController::class, 'show'])->name('purchases.show');
+    Route::get('payables/{payable}', [HutangController::class, 'show'])->name('payables.show');
+    Route::get('productions/{production}', [ProduksiController::class, 'show'])->name('productions.show');
+    Route::get('stock-corrections/{stock_correction}', [KoreksiStokController::class, 'show'])->name('stock-corrections.show');
+    Route::get('sales/{sale}', [PenjualanController::class, 'show'])->name('sales.show');
+    Route::get('receivables/{receivable}', [PiutangController::class, 'show'])->name('receivables.show');
 
     // -----------------------------------------------------------------------
     // Route Admin only – manajemen pengguna
