@@ -21,6 +21,32 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class LaporanController extends Controller
 {
+    private function getAkumulasiPenyusutan($date)
+    {
+        $peralatans = Peralatan::where('tgl_beli', '<=', $date)->get();
+        $totalDepreciation = 0;
+
+        foreach ($peralatans as $alat) {
+            if ($alat->persentase_penyusutan > 0) {
+                $tglBeli = Carbon::parse($alat->tgl_beli);
+                $targetDate = Carbon::parse($date);
+                $months = $tglBeli->diffInMonths($targetDate);
+                
+                if ($months > 0) {
+                    // Capping at 100% depreciation
+                    $maxMonths = floor(100 / $alat->persentase_penyusutan);
+                    if ($months > $maxMonths) {
+                        $months = $maxMonths;
+                    }
+                    
+                    $depreciation = $alat->harga_perolehan * ($alat->persentase_penyusutan / 100) * $months;
+                    $totalDepreciation += $depreciation;
+                }
+            }
+        }
+        return $totalDepreciation;
+    }
+
     private function getCashFlowData(Request $request)
     {
         $startDate = $request->input('start_date', Carbon::now()->startOfMonth()->toDateString());
@@ -112,8 +138,24 @@ class LaporanController extends Controller
         // 3. Laba Kotor
         $labaKotor = $pendapatan - $hpp;
 
-        // 4. Beban Operasional
-        $operasional = (float) PengeluaranOperasional::whereBetween('tanggal', [$startDate, $endDate])->sum('nominal');
+        // 4. Beban Operasional (Termasuk Rugi/Laba dari Koreksi Stok)
+        $operasionalKas = (float) PengeluaranOperasional::whereBetween('tanggal', [$startDate, $endDate])->sum('nominal');
+
+        $koreksiStokLoss = (float) DB::table('koreksi_stoks')
+            ->join('produks', 'koreksi_stoks.produk_id', '=', 'produks.id')
+            ->where('koreksi_stoks.jenis_koreksi', 'keluar')
+            ->whereBetween(DB::raw('DATE(koreksi_stoks.created_at)'), [$startDate, $endDate])
+            ->sum(DB::raw('koreksi_stoks.qty * produks.hpp'));
+
+        $koreksiStokGain = (float) DB::table('koreksi_stoks')
+            ->join('produks', 'koreksi_stoks.produk_id', '=', 'produks.id')
+            ->where('koreksi_stoks.jenis_koreksi', 'masuk')
+            ->whereBetween(DB::raw('DATE(koreksi_stoks.created_at)'), [$startDate, $endDate])
+            ->sum(DB::raw('koreksi_stoks.qty * produks.hpp'));
+
+        $bebanPenyusutan = $this->getAkumulasiPenyusutan($endDate) - $this->getAkumulasiPenyusutan($startDate);
+
+        $operasional = $operasionalKas + $koreksiStokLoss - $koreksiStokGain + $bebanPenyusutan;
 
         // 5. Laba Bersih
         $labaBersih = $labaKotor - $operasional;
@@ -125,6 +167,12 @@ class LaporanController extends Controller
             'hpp' => $hpp,
             'labaKotor' => $labaKotor,
             'operasional' => $operasional,
+            'operasionalDetail' => [
+                'kas' => $operasionalKas,
+                'koreksiStokLoss' => $koreksiStokLoss,
+                'koreksiStokGain' => $koreksiStokGain,
+                'penyusutan' => $bebanPenyusutan,
+            ],
             'labaBersih' => $labaBersih,
         ];
     }
@@ -160,7 +208,9 @@ class LaporanController extends Controller
         $totalAsetLancar = $kas + $piutang + $persediaanBahan + $persediaanProduk;
 
         // b. Aset Tetap
-        $peralatan = (float) Peralatan::where('tgl_beli', '<=', $date)->sum('harga_perolehan');
+        $peralatanAwal = (float) Peralatan::where('tgl_beli', '<=', $date)->sum('harga_perolehan');
+        $akumulasiPenyusutan = $this->getAkumulasiPenyusutan($date);
+        $peralatan = $peralatanAwal - $akumulasiPenyusutan;
 
         $totalAset = $totalAsetLancar + $peralatan;
 
@@ -170,7 +220,9 @@ class LaporanController extends Controller
         $hutang = (float) ($totalHutang - $totalPembayaranHutang);
 
         // 3. EKUITAS (MODAL)
-        $modal = (float) Modal::where(DB::raw('DATE(created_at)'), '<=', $date)->sum('nominal');
+        $modalKas = (float) Modal::where(DB::raw('DATE(created_at)'), '<=', $date)->sum('nominal');
+        // Asumsi: Karena Peralatan tidak memotong Kas/Hutang di sistem, maka Peralatan diakui sebagai Modal Bawaan Fisik (Nilai Awal).
+        $modal = $modalKas + $peralatanAwal;
 
         // Laba Ditahan (Kumulatif Laba Bersih sejak awal s.d $date)
         $pendapatanKumulatif = Penjualan::where(DB::raw('DATE(created_at)'), '<=', $date)->sum('total');
@@ -179,7 +231,22 @@ class LaporanController extends Controller
             ->join('produks', 'detail_penjualans.produk_id', '=', 'produks.id')
             ->where(DB::raw('DATE(penjualans.created_at)'), '<=', $date)
             ->sum(DB::raw('detail_penjualans.qty * produks.hpp'));
-        $operasionalKumulatif = PengeluaranOperasional::where('tanggal', '<=', $date)->sum('nominal');
+        
+        $operasionalKasKumulatif = PengeluaranOperasional::where('tanggal', '<=', $date)->sum('nominal');
+
+        $koreksiStokLossKumulatif = (float) DB::table('koreksi_stoks')
+            ->join('produks', 'koreksi_stoks.produk_id', '=', 'produks.id')
+            ->where('koreksi_stoks.jenis_koreksi', 'keluar')
+            ->where(DB::raw('DATE(koreksi_stoks.created_at)'), '<=', $date)
+            ->sum(DB::raw('koreksi_stoks.qty * produks.hpp'));
+
+        $koreksiStokGainKumulatif = (float) DB::table('koreksi_stoks')
+            ->join('produks', 'koreksi_stoks.produk_id', '=', 'produks.id')
+            ->where('koreksi_stoks.jenis_koreksi', 'masuk')
+            ->where(DB::raw('DATE(koreksi_stoks.created_at)'), '<=', $date)
+            ->sum(DB::raw('koreksi_stoks.qty * produks.hpp'));
+
+        $operasionalKumulatif = $operasionalKasKumulatif + $koreksiStokLossKumulatif - $koreksiStokGainKumulatif + $akumulasiPenyusutan;
         
         $labaDitahan = (float) ($pendapatanKumulatif - $hppKumulatif - $operasionalKumulatif);
 

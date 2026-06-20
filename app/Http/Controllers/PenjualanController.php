@@ -25,8 +25,8 @@ class PenjualanController extends Controller
     public function create()
     {
         return Inertia::render('Sales/Create', [
-            'customers' => Pelanggan::orderBy('nama_pelanggan')->get(),
-            'products' => Produk::orderBy('nama_produk')->get(),
+            'customers' => Pelanggan::orderBy('kode', 'asc')->get(),
+            'products' => Produk::orderBy('kode', 'asc')->get(),
             'paymentMethods' => MetodePembayaran::orderBy('nama_metode')->get(),
         ]);
     }
@@ -44,6 +44,21 @@ class PenjualanController extends Controller
             'items.*.qty' => 'required|numeric|min:1',
             'items.*.harga_satuan' => 'required|numeric|min:0',
         ]);
+
+        // --- VALIDASI STOK PRODUK JADI SEBELUM TRANSAKSI ---
+        $errors = [];
+        foreach ($validated['items'] as $item) {
+            $produk = Produk::findOrFail($item['produk_id']);
+            if ($item['qty'] > $produk->stok) {
+                $errors[] = "Stok produk \"{$produk->nama_produk}\" tidak mencukupi. "
+                    . "Dibutuhkan: {$item['qty']}, "
+                    . "Sisa stok: {$produk->stok}.";
+            }
+        }
+        if (!empty($errors)) {
+            return back()->withErrors(['items' => $errors])->withInput();
+        }
+        // ---------------------------------------------------
 
         DB::transaction(function () use ($validated) {
             $totalSales = collect($validated['items'])->sum(function ($item) {

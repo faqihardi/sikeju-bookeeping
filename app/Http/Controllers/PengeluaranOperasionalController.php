@@ -46,6 +46,16 @@ class PengeluaranOperasionalController extends Controller
     public function store(StorePengeluaranOperasionalRequest $request)
     {
         $data = $request->validated();
+
+        // --- VALIDASI SALDO KAS ---
+        $saldoKas = \App\Models\Kas::sum('masuk') - \App\Models\Kas::sum('keluar');
+        if ($data['nominal'] > $saldoKas) {
+            return back()->withErrors([
+                'nominal' => "Saldo kas perusahaan tidak mencukupi. Saldo saat ini: Rp " . number_format($saldoKas, 0, ',', '.') . "."
+            ])->withInput();
+        }
+        // --------------------------
+
         PengeluaranOperasional::create($data);
 
         return redirect()->route('operational-expenses.index')->with('success', 'Biaya operasional berhasil dicatat.');

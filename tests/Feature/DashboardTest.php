@@ -17,6 +17,7 @@ test('authenticated users can visit the dashboard and receive expected props', f
 
     $response->assertInertia(fn (Assert $page) => $page
         ->component('dashboard')
+        ->where('auth.user.role', 'finance')
         ->has('startDate')
         ->has('endDate')
         ->has('timelineTemplate')

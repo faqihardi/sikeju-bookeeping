@@ -50,8 +50,20 @@
             <td colspan="2">BEBAN OPERASIONAL</td>
         </tr>
         <tr>
-            <td style="padding-left: 20px;">Pengeluaran Biaya Operasional</td>
-            <td class="text-right text-danger">({{ number_format($operasional, 0, ',', '.') }})</td>
+            <td style="padding-left: 20px;">Pengeluaran Biaya Operasional (Kas)</td>
+            <td class="text-right text-danger">({{ number_format($operasionalDetail['kas'], 0, ',', '.') }})</td>
+        </tr>
+        <tr>
+            <td style="padding-left: 20px;">Kerugian Koreksi Stok</td>
+            <td class="text-right text-danger">({{ number_format($operasionalDetail['koreksiStokLoss'], 0, ',', '.') }})</td>
+        </tr>
+        <tr>
+            <td style="padding-left: 20px;">Keuntungan Koreksi Stok</td>
+            <td class="text-right text-success">{{ number_format($operasionalDetail['koreksiStokGain'], 0, ',', '.') }}</td>
+        </tr>
+        <tr>
+            <td style="padding-left: 20px;">Beban Penyusutan Peralatan</td>
+            <td class="text-right text-danger">({{ number_format($operasionalDetail['penyusutan'], 0, ',', '.') }})</td>
         </tr>
         <tr class="font-bold">
             <td style="padding-left: 10px;">Total Beban Operasional</td>

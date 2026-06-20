@@ -11,7 +11,7 @@ class PelangganController extends Controller
 {
     public function index()
     {
-        $customers = Pelanggan::orderBy('nama_pelanggan')->get();
+        $customers = Pelanggan::orderBy('kode', 'asc')->get();
         return Inertia::render('Pelanggan/Index', [
             'customers' => $customers
         ]);

@@ -19,10 +19,32 @@ class HutangController extends Controller
 
     public function bayarCicilan(Request $request, Hutang $hutang)
     {
+        // Hitung sisa hutang yang belum dibayar
+        $totalSudahDibayar = $hutang->pembayaranHutangs()->sum('nominal_bayar');
+        $sisaTagihan = $hutang->nominal - $totalSudahDibayar;
+
         $validated = $request->validate([
             'tanggal' => 'required|date',
-            'nominal_bayar' => 'required|numeric|min:1',
+            'nominal_bayar' => [
+                'required',
+                'numeric',
+                'min:1',
+                function ($attribute, $value, $fail) use ($sisaTagihan) {
+                    if ($value > $sisaTagihan) {
+                        $fail("Nominal bayar tidak boleh melebihi sisa hutang. Maksimal: Rp " . number_format($sisaTagihan, 0, ',', '.') . ".");
+                    }
+                },
+            ],
         ]);
+
+        // --- VALIDASI SALDO KAS ---
+        $saldoKas = \App\Models\Kas::sum('masuk') - \App\Models\Kas::sum('keluar');
+        if ($validated['nominal_bayar'] > $saldoKas) {
+            return back()->withErrors([
+                'nominal_bayar' => "Saldo kas perusahaan tidak mencukupi. Saldo saat ini: Rp " . number_format($saldoKas, 0, ',', '.') . "."
+            ])->withInput();
+        }
+        // --------------------------
 
         DB::transaction(function () use ($validated, $hutang) {
             // 1. Simpan history cicilan

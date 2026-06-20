@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kas;
 use App\Models\Pembelian;
 use App\Models\BahanBaku;
 use App\Models\Pemasok;
@@ -23,8 +24,8 @@ class PembelianController extends Controller
     public function create()
     {
         return Inertia::render('Purchases/Create', [
-            'pemasoks' => Pemasok::orderBy('nama_pemasok')->get(),
-            'bahanBakus' => BahanBaku::orderBy('nama_bahan')->get(),
+            'pemasoks' => Pemasok::orderBy('kode', 'asc')->get(),
+            'bahanBakus' => BahanBaku::orderBy('kode', 'asc')->get(),
             'metodePembayarans' => MetodePembayaran::orderBy('nama_metode')->get(),
         ]);
     }
@@ -42,6 +43,18 @@ class PembelianController extends Controller
             'items.*.qty' => 'required|numeric|min:1',
             'items.*.harga_satuan' => 'required|numeric|min:0',
         ]);
+
+        // --- VALIDASI SALDO KAS (hanya untuk pembelian Tunai) ---
+        if ($validated['jenis_pembayaran'] === 'Tunai') {
+            $totalPembelian = collect($validated['items'])->sum(fn($item) => $item['qty'] * $item['harga_satuan']);
+            $saldoKas = Kas::sum('masuk') - Kas::sum('keluar');
+            if ($totalPembelian > $saldoKas) {
+                return back()->withErrors([
+                    'jenis_pembayaran' => "Saldo kas perusahaan tidak mencukupi untuk pembelian tunai ini. Saldo saat ini: Rp " . number_format($saldoKas, 0, ',', '.') . ". Pertimbangkan pembayaran Kredit."
+                ])->withInput();
+            }
+        }
+        // ----------------------------------------------------------
 
         DB::transaction(function () use ($validated) {
             $totalPembelian = collect($validated['items'])->sum(function ($item) {

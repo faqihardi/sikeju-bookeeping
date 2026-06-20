@@ -12,7 +12,7 @@ use Inertia\Inertia;
 class ProdukController extends Controller
 {
     public function index() {
-        $products = Produk::orderBy('nama_produk')->get();
+        $products = Produk::orderBy('kode', 'asc')->get();
         return Inertia::render('Produk/Index', [
             'user' => 'Dashboard Produk',
             'products' => $products
@@ -22,7 +22,7 @@ class ProdukController extends Controller
     public function create() {
         return Inertia::render('Produk/Create', [
             'defaultKode' => $this->generateKode(),
-            'bahanBakus' => BahanBaku::orderBy('nama_bahan')->get(),
+            'bahanBakus' => BahanBaku::orderBy('kode', 'asc')->get(),
         ]);
     }
 
@@ -66,7 +66,7 @@ class ProdukController extends Controller
     public function edit(Produk $product) {
         return Inertia::render('Produk/Create', [
             'product' => $product->load('reseps'),
-            'bahanBakus' => BahanBaku::orderBy('nama_bahan')->get(),
+            'bahanBakus' => BahanBaku::orderBy('kode', 'asc')->get(),
         ]);
     }
 

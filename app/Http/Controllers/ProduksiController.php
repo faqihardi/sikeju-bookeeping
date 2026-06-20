@@ -41,8 +41,8 @@ class ProduksiController extends Controller
     public function create()
     {
         return Inertia::render('Production/Create', [
-            'products' => Produk::orderBy('nama_produk')->get(),
-            'bahanBakus' => BahanBaku::orderBy('nama_bahan')->get(),
+            'products' => Produk::orderBy('kode', 'asc')->get(),
+            'bahanBakus' => BahanBaku::orderBy('kode', 'asc')->get(),
             'recipes' => Resep::orderBy('produk_id')->get(),
         ]);
     }
@@ -58,6 +58,21 @@ class ProduksiController extends Controller
             'items.*.bahan_baku_id' => 'required|exists:bahan_bakus,id',
             'items.*.qty_bahan_dipakai' => 'required|integer|min:1',
         ]);
+
+        // --- VALIDASI STOK BAHAN BAKU SEBELUM TRANSAKSI ---
+        $errors = [];
+        foreach ($validated['items'] as $item) {
+            $bahanBaku = BahanBaku::findOrFail($item['bahan_baku_id']);
+            if ($item['qty_bahan_dipakai'] > $bahanBaku->stok) {
+                $errors[] = "Stok bahan baku \"{$bahanBaku->nama_bahan}\" tidak mencukupi. "
+                    . "Dibutuhkan: {$item['qty_bahan_dipakai']} {$bahanBaku->satuan}, "
+                    . "Sisa stok: {$bahanBaku->stok} {$bahanBaku->satuan}.";
+            }
+        }
+        if (!empty($errors)) {
+            return back()->withErrors(['items' => $errors])->withInput();
+        }
+        // ---------------------------------------------------
 
         DB::transaction(function () use ($validated) {
             // 1. Simpan Header Produksi

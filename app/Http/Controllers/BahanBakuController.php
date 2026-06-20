@@ -10,7 +10,7 @@ use Inertia\Inertia;
 class BahanBakuController extends Controller
 {
     public function index() {
-        $materials = BahanBaku::orderBy('nama_bahan')->get();
+        $materials = BahanBaku::orderBy('kode', 'asc')->get();
         return Inertia::render('BahanBaku/Index', [
             'user' => 'Dashboard Bahan Baku',
             'materials' => $materials

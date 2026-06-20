@@ -11,7 +11,7 @@ class PemasokController extends Controller
 {
     public function index()
     {
-        $suppliers = Pemasok::orderBy('nama_pemasok')->get();
+        $suppliers = Pemasok::orderBy('kode', 'asc')->get();
         return Inertia::render('Pemasok/Index', [
             'suppliers' => $suppliers
         ]);

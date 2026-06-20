@@ -45,7 +45,7 @@ class KoreksiStokController extends Controller
     public function create()
     {
         return Inertia::render('StockCorrection/Create', [
-            'products' => Produk::orderBy('nama_produk')->get(),
+            'products' => Produk::orderBy('kode', 'asc')->get(),
         ]);
     }
 
