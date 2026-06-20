@@ -21,9 +21,22 @@ class PiutangController extends Controller
 
     public function bayarCicilan(Request $request, Piutang $piutang)
     {
+        // Hitung sisa piutang yang belum diterima
+        $totalSudahDiterima = $piutang->pembayaranPiutangs()->sum('nominal_bayar');
+        $sisaTagihan = $piutang->nominal - $totalSudahDiterima;
+
         $validated = $request->validate([
             'tanggal' => 'required|date',
-            'nominal_bayar' => 'required|numeric|min:1',
+            'nominal_bayar' => [
+                'required',
+                'numeric',
+                'min:1',
+                function ($attribute, $value, $fail) use ($sisaTagihan) {
+                    if ($value > $sisaTagihan) {
+                        $fail("Nominal bayar tidak boleh melebihi sisa piutang. Maksimal: Rp " . number_format($sisaTagihan, 0, ',', '.') . ".");
+                    }
+                },
+            ],
         ]);
 
         DB::transaction(function () use ($validated, $piutang) {

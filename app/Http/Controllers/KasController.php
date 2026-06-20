@@ -35,6 +35,17 @@ class KasController extends Controller
         $masuk = $data['tipe_penyesuaian'] === 'masuk' ? $data['nominal'] : 0;
         $keluar = $data['tipe_penyesuaian'] === 'keluar' ? $data['nominal'] : 0;
 
+        // --- VALIDASI SALDO KAS MINUS ---
+        if ($keluar > 0) {
+            $saldoSaatIni = Kas::sum('masuk') - Kas::sum('keluar');
+            if ($keluar > $saldoSaatIni) {
+                return back()->withErrors([
+                    'nominal' => "Saldo kas tidak mencukupi untuk pengeluaran ini. Pastikan saldo tercukupi atau catat pemasukan terlebih dahulu."
+                ])->withInput();
+            }
+        }
+        // --------------------------------
+
         Kas::create([
             'tanggal' => $data['tanggal'],
             'keterangan' => $data['keterangan'],
@@ -54,6 +65,15 @@ class KasController extends Controller
         if ($cash->sumber !== 'lainnya') {
             return redirect()->route('cash.index')->with('error', 'Transaksi otomatis tidak dapat dihapus secara langsung. Hapus dari sumber transaksinya.');
         }
+
+        // --- VALIDASI SALDO KAS MINUS SAAT HAPUS ---
+        if ($cash->masuk > 0) {
+            $saldoSaatIni = Kas::sum('masuk') - Kas::sum('keluar');
+            if (($saldoSaatIni - $cash->masuk) < 0) {
+                return redirect()->route('cash.index')->with('error', 'Gagal menghapus! Menghapus data kas masuk ini akan membuat total saldo kas menjadi minus.');
+            }
+        }
+        // -------------------------------------------
 
         $cash->delete();
         return redirect()->route('cash.index')->with('success', 'Penyesuaian kas berhasil dihapus.');
