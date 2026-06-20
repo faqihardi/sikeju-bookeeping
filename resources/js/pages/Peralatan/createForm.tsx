@@ -28,6 +28,7 @@ interface Props {
         harga_perolehan: string
         tgl_beli: string
         umur_ekonomis: number
+        persentase_penyusutan: string
         status_alat: 'layak_pakai' | 'tidak_layak_pakai'
     }
     defaultKode?: string
@@ -46,6 +47,7 @@ export function PeralatanForm({
         harga_perolehan: peralatan?.harga_perolehan ?? "",
         tgl_beli: peralatan?.tgl_beli ?? "",
         umur_ekonomis: peralatan?.umur_ekonomis ?? "",
+        persentase_penyusutan: peralatan?.persentase_penyusutan ?? "0",
         status_alat: peralatan?.status_alat ?? "layak_pakai",
     })
 
@@ -121,7 +123,7 @@ export function PeralatanForm({
                     )}
                 </Field>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid md:grid-cols-3 gap-4">
                     <Field>
                         <FieldLabel htmlFor="harga_perolehan">
                             Harga Perolehan
@@ -168,6 +170,32 @@ export function PeralatanForm({
                         {form.errors.umur_ekonomis && (
                             <FieldError>
                                 {form.errors.umur_ekonomis}
+                            </FieldError>
+                        )}
+                    </Field>
+
+                    <Field>
+                        <FieldLabel htmlFor="persentase_penyusutan">
+                            Penyusutan per Bulan (%)
+                        </FieldLabel>
+
+                        <Input
+                            id="persentase_penyusutan"
+                            type="number"
+                            step="0.01"
+                            placeholder="Contoh: 0.42"
+                            value={form.data.persentase_penyusutan}
+                            onChange={(e) =>
+                                form.setData(
+                                    "persentase_penyusutan",
+                                    e.target.value
+                                )
+                            }
+                        />
+
+                        {form.errors.persentase_penyusutan && (
+                            <FieldError>
+                                {form.errors.persentase_penyusutan}
                             </FieldError>
                         )}
                     </Field>

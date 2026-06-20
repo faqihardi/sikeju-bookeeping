@@ -25,6 +25,7 @@ export type Peralatan = {
   harga_perolehan: string
   tgl_beli: string
   umur_ekonomis: number
+  persentase_penyusutan: string
   status_alat: 'layak_pakai' | 'tidak_layak_pakai'
   updated_at: string
 }
@@ -72,6 +73,11 @@ export const columns: ColumnDef<Peralatan>[] = [
     accessorKey: "umur_ekonomis",
     header: "Umur Ekonomis",
     cell: ({ row }) => `${row.getValue("umur_ekonomis")} Bulan`,
+  },
+  {
+    accessorKey: "persentase_penyusutan",
+    header: "Penyusutan",
+    cell: ({ row }) => `${row.getValue("persentase_penyusutan")} %/bln`,
   },
   {
     accessorKey: "status_alat",

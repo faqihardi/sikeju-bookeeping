@@ -41,8 +41,8 @@ class ProduksiController extends Controller
     public function create()
     {
         return Inertia::render('Production/Create', [
-            'products' => Produk::orderBy('nama_produk')->get(),
-            'bahanBakus' => BahanBaku::orderBy('nama_bahan')->get(),
+            'products' => Produk::orderBy('kode', 'asc')->get(),
+            'bahanBakus' => BahanBaku::orderBy('kode', 'asc')->get(),
             'recipes' => Resep::orderBy('produk_id')->get(),
         ]);
     }

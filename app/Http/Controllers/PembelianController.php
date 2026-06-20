@@ -24,8 +24,8 @@ class PembelianController extends Controller
     public function create()
     {
         return Inertia::render('Purchases/Create', [
-            'pemasoks' => Pemasok::orderBy('nama_pemasok')->get(),
-            'bahanBakus' => BahanBaku::orderBy('nama_bahan')->get(),
+            'pemasoks' => Pemasok::orderBy('kode', 'asc')->get(),
+            'bahanBakus' => BahanBaku::orderBy('kode', 'asc')->get(),
             'metodePembayarans' => MetodePembayaran::orderBy('nama_metode')->get(),
         ]);
     }

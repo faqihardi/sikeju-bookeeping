@@ -23,6 +23,7 @@ class StorePeralatanRequest extends FormRequest
             'harga_perolehan' => 'required|numeric|min:0',
             'tgl_beli' => 'required|date',
             'umur_ekonomis' => 'required|integer|min:1',
+            'persentase_penyusutan' => 'required|numeric|min:0|max:100',
             'status_alat' => 'required|in:layak_pakai,tidak_layak_pakai',
         ];
     }

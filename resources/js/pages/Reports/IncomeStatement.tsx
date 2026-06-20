@@ -14,6 +14,12 @@ interface Props {
     hpp: number;
     labaKotor: number;
     operasional: number;
+    operasionalDetail: {
+        kas: number;
+        koreksiStokLoss: number;
+        koreksiStokGain: number;
+        penyusutan: number;
+    };
     labaBersih: number;
 }
 
@@ -24,6 +30,7 @@ export default function IncomeStatement({
     hpp,
     labaKotor,
     operasional,
+    operasionalDetail,
     labaBersih,
 }: Props) {
     const [filterStart, setFilterStart] = useState(startDate);
@@ -189,8 +196,20 @@ export default function IncomeStatement({
                                 <span>Beban Operasional</span>
                             </div>
                             <div className="flex justify-between items-center text-sm border-b py-2 pl-4">
-                                <span>Pengeluaran Biaya Operasional</span>
-                                <span className="font-semibold text-destructive">({formatRupiah(operasional)})</span>
+                                <span>Pengeluaran Biaya Operasional (Kas)</span>
+                                <span className="font-semibold text-destructive">({formatRupiah(operasionalDetail.kas)})</span>
+                            </div>
+                            <div className="flex justify-between items-center text-sm border-b py-2 pl-4">
+                                <span>Kerugian Koreksi Stok (Barang Rusak/Hilang)</span>
+                                <span className="font-semibold text-destructive">({formatRupiah(operasionalDetail.koreksiStokLoss)})</span>
+                            </div>
+                            <div className="flex justify-between items-center text-sm border-b py-2 pl-4">
+                                <span>Keuntungan Koreksi Stok (Barang Lebih)</span>
+                                <span className="font-semibold text-green-600">{formatRupiah(operasionalDetail.koreksiStokGain)}</span>
+                            </div>
+                            <div className="flex justify-between items-center text-sm border-b py-2 pl-4">
+                                <span>Beban Penyusutan Peralatan</span>
+                                <span className="font-semibold text-destructive">({formatRupiah(operasionalDetail.penyusutan)})</span>
                             </div>
                             <div className="flex justify-between items-center text-sm font-bold bg-muted/30 p-2 rounded">
                                 <span>Total Beban Operasional</span>

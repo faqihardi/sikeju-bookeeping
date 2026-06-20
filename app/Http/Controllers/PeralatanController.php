@@ -11,7 +11,7 @@ class PeralatanController extends Controller
 {
     public function index()
     {
-        $equipment = Peralatan::orderBy('nama_alat')->get();
+        $equipment = Peralatan::orderBy('kode', 'asc')->get();
         return Inertia::render('Peralatan/Index', [
             'equipment' => $equipment
         ]);

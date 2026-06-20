@@ -25,8 +25,8 @@ class PenjualanController extends Controller
     public function create()
     {
         return Inertia::render('Sales/Create', [
-            'customers' => Pelanggan::orderBy('nama_pelanggan')->get(),
-            'products' => Produk::orderBy('nama_produk')->get(),
+            'customers' => Pelanggan::orderBy('kode', 'asc')->get(),
+            'products' => Produk::orderBy('kode', 'asc')->get(),
             'paymentMethods' => MetodePembayaran::orderBy('nama_metode')->get(),
         ]);
     }
