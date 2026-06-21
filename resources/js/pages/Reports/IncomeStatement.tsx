@@ -20,6 +20,8 @@ interface Props {
         koreksiStokGain: number;
         penyusutan: number;
     };
+    labaBersihSebelumPajak: number;
+    bebanPajak: number;
     labaBersih: number;
 }
 
@@ -31,6 +33,8 @@ export default function IncomeStatement({
     labaKotor,
     operasional,
     operasionalDetail,
+    labaBersihSebelumPajak,
+    bebanPajak,
     labaBersih,
 }: Props) {
     const [filterStart, setFilterStart] = useState(startDate);
@@ -217,13 +221,38 @@ export default function IncomeStatement({
                             </div>
                         </div>
 
-                        {/* LABA BERSIH */}
+                        {/* LABA BERSIH SEBELUM PAJAK */}
                         <div className={`flex justify-between items-center p-4 border font-extrabold rounded-lg text-lg shadow-sm ${
-                            labaBersih >= 0 
+                            labaBersihSebelumPajak >= 0 
                                 ? 'bg-emerald-500/10 dark:bg-emerald-500/25 border-emerald-500/30 text-emerald-800 dark:text-emerald-300' 
                                 : 'bg-destructive/10 dark:bg-destructive/25 border-destructive/30 text-destructive'
                         }`}>
                             <span>LABA BERSIH OPERASIONAL</span>
+                            <span>{formatRupiah(labaBersihSebelumPajak)}</span>
+                        </div>
+
+                        {/* BEBAN PAJAK */}
+                        <div className="space-y-2">
+                            <div className="flex justify-between font-bold text-sm text-muted-foreground tracking-wider uppercase">
+                                <span>Kewajiban Pajak</span>
+                            </div>
+                            <div className="flex justify-between items-center text-sm border-b py-2 pl-4">
+                                <span>Beban Pajak PPh Final UMKM (0.5% Omzet)</span>
+                                <span className="font-semibold text-destructive">({formatRupiah(bebanPajak)})</span>
+                            </div>
+                            <div className="flex justify-between items-center text-sm font-bold bg-muted/30 p-2 rounded">
+                                <span>Total Beban Pajak</span>
+                                <span>({formatRupiah(bebanPajak)})</span>
+                            </div>
+                        </div>
+
+                        {/* LABA BERSIH SETELAH PAJAK */}
+                        <div className={`flex justify-between items-center p-4 border font-extrabold rounded-lg text-lg shadow-sm ${
+                            labaBersih >= 0 
+                                ? 'bg-emerald-600 dark:bg-emerald-500 border-emerald-600 dark:border-emerald-500 text-white dark:text-gray-950' 
+                                : 'bg-destructive border-destructive text-white'
+                        }`}>
+                            <span>LABA BERSIH SETELAH PAJAK</span>
                             <span>{formatRupiah(labaBersih)}</span>
                         </div>
 

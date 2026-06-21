@@ -69,12 +69,16 @@
                         <td colspan="2">Kewajiban (Hutang)</td>
                     </tr>
                     <tr>
-                        <td style="padding-left: 15px;">Hutang Usaha</td>
+                        <td style="padding-left: 15px;">Hutang Dagang</td>
                         <td class="text-right">Rp {{ number_format($liabilities['hutang'] ?? 0, 0, ',', '.') }}</td>
+                    </tr>
+                    <tr>
+                        <td style="padding-left: 15px;">Hutang Pajak PPh Final</td>
+                        <td class="text-right">Rp {{ number_format($liabilities['hutangPajak'] ?? 0, 0, ',', '.') }}</td>
                     </tr>
                     <tr class="font-bold">
                         <td style="padding-left: 10px;">Total Kewajiban</td>
-                        <td class="text-right">Rp {{ number_format($liabilities['hutang'] ?? 0, 0, ',', '.') }}</td>
+                        <td class="text-right">Rp {{ number_format($liabilities['totalHutang'] ?? 0, 0, ',', '.') }}</td>
                     </tr>
 
                     <tr class="bg-gray-50 font-bold">

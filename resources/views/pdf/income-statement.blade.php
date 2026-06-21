@@ -70,9 +70,26 @@
             <td class="text-right text-danger">({{ number_format($operasional, 0, ',', '.') }})</td>
         </tr>
 
-        <!-- LABA BERSIH -->
-        <tr class="{{ $labaBersih >= 0 ? 'bg-emerald-50 text-success' : 'bg-red-50 text-danger' }} font-bold" style="font-size: 10.5pt;">
+        <!-- LABA BERSIH SEBELUM PAJAK -->
+        <tr class="{{ $labaBersihSebelumPajak >= 0 ? 'bg-emerald-50 text-success' : 'bg-red-50 text-danger' }} font-bold" style="font-size: 10.5pt;">
             <td>LABA BERSIH OPERASIONAL</td>
+            <td class="text-right" style="border-top: 2px solid #2d3748;">
+                Rp {{ number_format($labaBersihSebelumPajak, 0, ',', '.') }}
+            </td>
+        </tr>
+
+        <!-- BEBAN PAJAK -->
+        <tr class="bg-gray-50 font-bold">
+            <td colspan="2">KEWAJIBAN PAJAK</td>
+        </tr>
+        <tr>
+            <td style="padding-left: 20px;">Beban Pajak PPh Final UMKM (0.5% Omzet)</td>
+            <td class="text-right text-danger">({{ number_format($bebanPajak, 0, ',', '.') }})</td>
+        </tr>
+
+        <!-- LABA BERSIH SETELAH PAJAK -->
+        <tr class="{{ $labaBersih >= 0 ? 'bg-emerald-50 text-success' : 'bg-red-50 text-danger' }} font-bold" style="font-size: 11pt;">
+            <td>LABA BERSIH SETELAH PAJAK</td>
             <td class="text-right" style="border-top: 2px solid #2d3748; border-bottom: 2px double #2d3748;">
                 Rp {{ number_format($labaBersih, 0, ',', '.') }}
             </td>

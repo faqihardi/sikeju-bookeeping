@@ -157,8 +157,14 @@ class LaporanController extends Controller
 
         $operasional = $operasionalKas + $koreksiStokLoss - $koreksiStokGain + $bebanPenyusutan;
 
-        // 5. Laba Bersih
-        $labaBersih = $labaKotor - $operasional;
+        // 5. Laba Bersih Sebelum Pajak
+        $labaBersihSebelumPajak = $labaKotor - $operasional;
+
+        // 6. Beban Pajak PPh Final (0.5% dari Omzet/Pendapatan)
+        $bebanPajak = $pendapatan * 0.005;
+
+        // 7. Laba Bersih Setelah Pajak
+        $labaBersihSetelahPajak = $labaBersihSebelumPajak - $bebanPajak;
 
         return [
             'startDate' => $startDate,
@@ -173,7 +179,9 @@ class LaporanController extends Controller
                 'koreksiStokGain' => $koreksiStokGain,
                 'penyusutan' => $bebanPenyusutan,
             ],
-            'labaBersih' => $labaBersih,
+            'labaBersihSebelumPajak' => $labaBersihSebelumPajak,
+            'bebanPajak' => $bebanPajak,
+            'labaBersih' => $labaBersihSetelahPajak,
         ];
     }
 
@@ -217,7 +225,22 @@ class LaporanController extends Controller
         // 2. KEWAJIBAN (HUTANG)
         $totalHutang = Hutang::where(DB::raw('DATE(created_at)'), '<=', $date)->sum('nominal');
         $totalPembayaranHutang = PembayaranHutang::where('tanggal', '<=', $date)->sum('nominal_bayar');
-        $hutang = (float) ($totalHutang - $totalPembayaranHutang);
+        $hutangDagang = (float) ($totalHutang - $totalPembayaranHutang);
+
+        // Hitung Hutang Pajak
+        $pendapatanPajak = Penjualan::where(DB::raw('DATE(created_at)'), '<=', $date)->sum('total');
+        $kewajibanPajakKumulatif = $pendapatanPajak * 0.005;
+        
+        $pajakTerbayar = PengeluaranOperasional::where('tanggal', '<=', $date)
+            ->where(function ($query) {
+                $query->where('kategori', 'Pajak')
+                    ->orWhere('keterangan', 'LIKE', '%pajak%');
+            })->sum('nominal');
+
+        $hutangPajak = (float) ($kewajibanPajakKumulatif - $pajakTerbayar);
+        if ($hutangPajak < 0) $hutangPajak = 0; // Jika bayar lebih, dianggap 0 untuk hutang
+
+        $hutang = $hutangDagang + $hutangPajak;
 
         // 3. EKUITAS (MODAL)
         $modalKas = (float) Modal::where(DB::raw('DATE(created_at)'), '<=', $date)->sum('nominal');
@@ -248,7 +271,7 @@ class LaporanController extends Controller
 
         $operasionalKumulatif = $operasionalKasKumulatif + $koreksiStokLossKumulatif - $koreksiStokGainKumulatif + $akumulasiPenyusutan;
         
-        $labaDitahan = (float) ($pendapatanKumulatif - $hppKumulatif - $operasionalKumulatif);
+        $labaDitahan = (float) ($pendapatanKumulatif - $hppKumulatif - $operasionalKumulatif - $hutangPajak);
 
         $totalEkuitas = $modal + $labaDitahan;
         $totalKewajibanDanEkuitas = $hutang + $totalEkuitas;
@@ -265,7 +288,9 @@ class LaporanController extends Controller
                 'totalAset' => $totalAset,
             ],
             'liabilities' => [
-                'hutang' => $hutang,
+                'hutang' => $hutangDagang,
+                'hutangPajak' => $hutangPajak,
+                'totalHutang' => $hutang,
             ],
             'equity' => [
                 'modal' => $modal,
