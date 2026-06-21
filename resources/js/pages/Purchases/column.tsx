@@ -3,7 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { router } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
-import { Trash2, ArrowUpDown, BadgeCheck, Clock } from 'lucide-react';
+import { Trash2, ArrowUpDown, BadgeCheck, Clock, Eye } from 'lucide-react';
 import * as purchases from '@/actions/App/Http/Controllers/PembelianController';
 import { formatRupiah } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -18,6 +18,14 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 
 export type Pembelian = {
   id: number
@@ -26,6 +34,11 @@ export type Pembelian = {
   created_at: string
   pemasok: { nama_pemasok: string } | null
   hutang: { status: 'lunas' | 'belum_lunas' } | null
+  detail_pembelians: {
+    qty: number;
+    satuan: string;
+    bahan_baku?: { nama_bahan: string }
+  }[]
 }
 
 export const columns: ColumnDef<Pembelian>[] = [
@@ -58,6 +71,41 @@ export const columns: ColumnDef<Pembelian>[] = [
     id: "pemasok",
     header: "Pemasok",
     cell: ({ row }) => row.original.pemasok?.nama_pemasok ?? "-"
+  },
+  {
+    id: "items",
+    header: "Bahan Baku Dibeli",
+    cell: ({ row }) => {
+      const items = row.original.detail_pembelians || [];
+      if (items.length === 0) return "-";
+
+      return (
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="outline" size="sm" className="h-8 text-xs font-normal">
+              <Eye className="mr-2 h-3 w-3" />
+              {items.length} Jenis
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Detail Bahan Baku Dibeli</DialogTitle>
+              <DialogDescription>
+                Rincian bahan baku dari transaksi {row.original.nama_pembelian}.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="flex flex-col gap-2 mt-2 max-h-[60vh] overflow-y-auto pr-2">
+              {items.map((item, idx) => (
+                <div key={idx} className="flex justify-between items-center border-b pb-2 text-sm">
+                  <span className="font-medium">{item.bahan_baku?.nama_bahan ?? 'Bahan Baku'}</span>
+                  <Badge variant="secondary" className="font-bold">{item.qty} {item.satuan ?? ''}</Badge>
+                </div>
+              ))}
+            </div>
+          </DialogContent>
+        </Dialog>
+      );
+    }
   },
   {
     accessorKey: "total",

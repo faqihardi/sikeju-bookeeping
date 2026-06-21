@@ -3,7 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { router } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
-import { Trash2, ArrowUpDown } from 'lucide-react';
+import { Trash2, ArrowUpDown, Eye } from 'lucide-react';
 import * as productions from '@/actions/App/Http/Controllers/ProduksiController';
 import { Badge } from "@/components/ui/badge";
 import {
@@ -17,6 +17,14 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 
 export type PemakaianBahan = {
   id: number
@@ -86,14 +94,32 @@ export const columns: ColumnDef<Produksi>[] = [
     cell: ({ row }) => {
       const materials = row.original.pemakaian_bahans;
       if (!materials || materials.length === 0) return "-";
+
       return (
-        <div className="flex flex-wrap gap-1 max-w-sm">
-          {materials.map((m) => (
-            <Badge key={m.id} variant="outline" className="text-xs">
-              {m.bahan_baku?.nama_bahan ?? `Bahan #${m.bahan_baku_id}`}: {m.qty_bahan_dipakai} {m.bahan_baku?.satuan ?? ''}
-            </Badge>
-          ))}
-        </div>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="outline" size="sm" className="h-8 text-xs font-normal">
+              <Eye className="mr-2 h-3 w-3" />
+              {materials.length} Jenis
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Detail Bahan Baku Terpakai</DialogTitle>
+              <DialogDescription>
+                Rincian bahan baku yang digunakan untuk produksi {row.original.produk?.nama_produk ?? 'Produk'}.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="flex flex-col gap-2 mt-2 max-h-[60vh] overflow-y-auto pr-2">
+              {materials.map((m) => (
+                <div key={m.id} className="flex justify-between items-center border-b pb-2 text-sm">
+                  <span className="font-medium">{m.bahan_baku?.nama_bahan ?? `Bahan #${m.bahan_baku_id}`}</span>
+                  <Badge variant="secondary" className="font-bold">{m.qty_bahan_dipakai} {m.bahan_baku?.satuan ?? ''}</Badge>
+                </div>
+              ))}
+            </div>
+          </DialogContent>
+        </Dialog>
       );
     }
   },

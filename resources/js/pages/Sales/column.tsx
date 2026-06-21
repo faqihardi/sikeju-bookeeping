@@ -3,7 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { router } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
-import { Trash2, ArrowUpDown, BadgeCheck, Clock } from 'lucide-react';
+import { Trash2, ArrowUpDown, BadgeCheck, Clock, Eye } from 'lucide-react';
 import * as sales from '@/actions/App/Http/Controllers/PenjualanController';
 import { formatRupiah } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -18,6 +18,14 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 
 export type Penjualan = {
   id: number
@@ -26,6 +34,10 @@ export type Penjualan = {
   created_at: string
   pelanggan: { nama_pelanggan: string } | null
   piutang: { status: 'lunas' | 'belum_lunas' } | null
+  detail_penjualans: { 
+    qty: number;
+    produk?: { nama_produk: string; satuan: string }
+  }[]
 }
 
 export const columns: ColumnDef<Penjualan>[] = [
@@ -58,6 +70,42 @@ export const columns: ColumnDef<Penjualan>[] = [
     id: "pelanggan",
     header: "Pelanggan",
     cell: ({ row }) => row.original.pelanggan?.nama_pelanggan ?? "-"
+  },
+  {
+    id: "items",
+    header: "Produk Terjual",
+    cell: ({ row }) => {
+      const items = row.original.detail_penjualans || [];
+      const totalQty = items.reduce((sum, item) => sum + (Number(item.qty) || 0), 0);
+      if (items.length === 0) return "-";
+      
+      return (
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="outline" size="sm" className="h-8 text-xs font-normal">
+              <Eye className="mr-2 h-3 w-3" />
+              {items.length} Varian ({totalQty} Item)
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Detail Produk Terjual</DialogTitle>
+              <DialogDescription>
+                Rincian produk jadi pada faktur {row.original.no_faktur}.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="flex flex-col gap-2 mt-2 max-h-[60vh] overflow-y-auto pr-2">
+              {items.map((item, idx) => (
+                <div key={idx} className="flex justify-between items-center border-b pb-2 text-sm">
+                  <span className="font-medium">{item.produk?.nama_produk ?? 'Produk'}</span>
+                  <Badge variant="secondary" className="font-bold">{item.qty} {item.produk?.satuan ?? ''}</Badge>
+                </div>
+              ))}
+            </div>
+          </DialogContent>
+        </Dialog>
+      );
+    }
   },
   {
     accessorKey: "total",
